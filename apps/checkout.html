@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - ALUNA</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#f5f7fb;
+  color:#111;
+}
+
+.container{
+  padding:20px;
+  max-width:500px;
+  margin:auto;
+}
+
+h2{
+  margin-bottom:10px;
+}
+
+/* CARD */
+.box{
+  background:white;
+  border-radius:12px;
+  padding:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+  margin-bottom:15px;
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  margin:5px 0;
+}
+
+.total{
+  font-weight:bold;
+  margin-top:10px;
+}
+
+/* INPUT */
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#38bdf8;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#0ea5e9;
+}
+
+/* BACK */
+.back{
+  margin-top:10px;
+  display:block;
+  text-align:center;
+  color:#38bdf8;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Checkout</h2>
+
+<!-- LIST ITEM -->
+<div class="box">
+  <div id="items"></div>
+  <div class="total" id="total"></div>
+</div>
+
+<!-- FORM -->
+<div class="box">
+  <input id="nama" placeholder="Nama kamu" required>
+  <textarea id="catatan" placeholder="Catatan (opsional)"></textarea>
+</div>
+
+<button onclick="order()">Kirim Pesanan</button>
+
+<a href="index.html" class="back">⬅ Kembali</a>
+
+</div>
+
+<script>
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const rupiah = n => "Rp " + n.toLocaleString("id-ID");
+
+let total = 0;
+const itemsDiv = document.getElementById("items");
+
+/* RENDER ITEM */
+if(cart.length === 0){
+  itemsDiv.innerHTML = "<p>Keranjang kosong</p>";
+}
+
+cart.forEach(item=>{
+  const subtotal = item.price * item.qty;
+  total += subtotal;
+
+  itemsDiv.innerHTML += `
+  <div class="item">
+    <div>${item.name} (${item.label}) x${item.qty}</div>
+    <div>${rupiah(subtotal)}</div>
+  </div>`;
+});
+
+document.getElementById("total").innerText = "Total: " + rupiah(total);
+
+/* ORDER */
+function order(){
+  if(cart.length === 0) return alert("Keranjang kosong!");
+
+  const nama = document.getElementById("nama").value.trim();
+  const catatan = document.getElementById("catatan").value.trim();
+
+  if(!nama) return alert("Isi nama dulu!");
+
+  let text = "Halo, saya mau pesan:\n\n";
+
+  cart.forEach(item=>{
+    text += `• ${item.name} (${item.label}) x${item.qty}\n`;
+  });
+
+  text += "\nTotal: " + rupiah(total);
+  text += "\nNama: " + nama;
+
+  if(catatan){
+    text += "\nCatatan: " + catatan;
+  }
+
+  // buka WA
+  window.open(`https://wa.me/6289656009717?text=${encodeURIComponent(text)}`);
+
+  // optional: kosongkan cart setelah checkout
+  localStorage.removeItem("cart");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Apps - ALUNA</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  background:#0c2f3a;
+  color:white;
+}
+
+header {
+  padding:15px;
+  text-align:center;
+  background:#0f172a;
+  font-weight:bold;
+}
+
+/* GRID */
+.container {
+  padding:15px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+}
+
+.card {
+  background:#1e293b;
+  border-radius:12px;
+  padding:12px;
+  text-align:center;
+}
+
+.icon {
+  font-size:30px;
+}
+
+.title {
+  font-weight:bold;
+  margin:5px 0;
+}
+
+.option {
+  display:block;
+  width:100%;
+  margin:4px 0;
+  padding:6px;
+  border:none;
+  border-radius:6px;
+  background:#334155;
+  color:white;
+  cursor:pointer;
+}
+
+.option.active {
+  background:#38bdf8;
+  color:black;
+}
+
+.add {
+  margin-top:8px;
+  width:100%;
+  padding:7px;
+  border:none;
+  border-radius:6px;
+  background:#22c55e;
+  cursor:pointer;
+}
+
+/* CART */
+.cart {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#0f172a;
+  padding:10px;
+  border-top:1px solid #333;
+}
+
+.cart-item {
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  margin:3px 0;
+}
+
+.qty {
+  display:flex;
+  gap:5px;
+}
+
+.qty button {
+  padding:2px 6px;
+  border:none;
+  background:#334155;
+  color:white;
+  cursor:pointer;
+}
+
+.remove {
+  color:red;
+  cursor:pointer;
+}
+
+.total {
+  margin-top:5px;
+  font-weight:bold;
+}
+
+.checkout {
+  margin-top:5px;
+  width:100%;
+  padding:8px;
+  border:none;
+  background:#38bdf8;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>📱 Premium Apps</header>
+
+<div class="container">
+<div class="grid" id="grid"></div>
+</div>
+
+<div class="cart">
+  <div id="cartList"></div>
+  <div class="total" id="total">Total: Rp 0</div>
+  <button class="checkout" onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+const data = [
+  {name:"Netflix", icon:"🎬", options:[
+    {label:"Sharing 35K", price:35000},
+    {label:"Semi Private 45K", price:45000}
+  ]},
+  {name:"Spotify", icon:"🎧", options:[
+    {label:"Famplan 29K", price:29000},
+    {label:"Indplan 41K", price:41000}
+  ]},
+  {name:"ChatGPT", icon:"🤖", options:[
+    {label:"Fulgur 15K", price:15000},
+    {label:"Nogar 10K", price:10000}
+  ]},
+  {name:"Canva", icon:"🎨", options:[
+    {label:"1 Bulan 3K", price:3000},
+    {label:"3 Bulan 10K", price:10000},
+    {label:"1 Tahun 15K", price:15000}
+  ]},
+  {name:"YouTube", icon:"📺", options:[
+    {label:"1 Bulan 5K", price:5000},
+    {label:"3 Bulan 10K", price:10000}
+  ]},
+  {name:"CapCut", icon:"✂️", options:[
+    {label:"Sharing 20K", price:20000}
+  ]},
+  {name:"Grammarly", icon:"📝", options:[
+    {label:"1 Bulan 13K", price:13000},
+    {label:"3 Bulan 24K", price:24000}
+  ]}
+];
+
+const grid = document.getElementById("grid");
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+/* RENDER PRODUK */
+data.forEach((item,i)=>{
+  let html = `<div class="card" data-i="${i}">
+  <div class="icon">${item.icon}</div>
+  <div class="title">${item.name}</div>`;
+
+  item.options.forEach((opt,j)=>{
+    html += `<button class="option" data-j="${j}">${opt.label}</button>`;
+  });
+
+  html += `<button class="add">Tambah</button></div>`;
+  grid.innerHTML += html;
+});
+
+/* SELECT OPTION */
+document.querySelectorAll('.card').forEach(card=>{
+  let selected = null;
+  let price = 0;
+
+  card.querySelectorAll('.option').forEach(btn=>{
+    btn.onclick = ()=>{
+      card.querySelectorAll('.option').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      selected = btn.innerText;
+      price = data[card.dataset.i].options[btn.dataset.j].price;
+    }
+  });
+
+  card.querySelector('.add').onclick = ()=>{
+    if(!selected) return alert("Pilih paket dulu!");
+
+    cart.push({
+      name:data[card.dataset.i].name,
+      label:selected,
+      price:price,
+      qty:1
+    });
+
+    save();
+  }
+});
+
+/* CART RENDER */
+function save(){
+  localStorage.setItem("cart", JSON.stringify(cart));
+  renderCart();
+}
+
+function renderCart(){
+  const list = document.getElementById("cartList");
+  const totalEl = document.getElementById("total");
+
+  list.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item,i)=>{
+    total += item.price * item.qty;
+
+    list.innerHTML += `
+    <div class="cart-item">
+      <div>${item.name} (${item.label})</div>
+      <div class="qty">
+        <button onclick="changeQty(${i},-1)">-</button>
+        ${item.qty}
+        <button onclick="changeQty(${i},1)">+</button>
+      </div>
+      <div class="remove" onclick="removeItem(${i})">x</div>
+    </div>`;
+  });
+
+  totalEl.innerText = "Total: Rp " + total.toLocaleString();
+}
+
+function changeQty(i,val){
+  cart[i].qty += val;
+  if(cart[i].qty <= 0) cart.splice(i,1);
+  save();
+}
+
+function removeItem(i){
+  cart.splice(i,1);
+  save();
+}
+
+function checkout(){
+  if(cart.length===0) return alert("Keranjang kosong!");
+
+  // simpan cart dulu
+  localStorage.setItem("cart", JSON.stringify(cart));
+  console.log("checkout jalan");
+
+  // pindah ke halaman checkout
+  location.href = "checkout.html";
+}
+
+ 
+
+/* INIT */
+renderCart();
+</script>
+
+</body>
+</html>
