@@ -9,6 +9,8 @@
         :root { --primary: #ff6b00; --secondary: #ff8c3a; }
         body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f6f7fb; padding-bottom: 80px; }
 
+        
+
         /* HEADER */
         .header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -226,47 +228,29 @@ function renderCartList() {
 }
 
 function checkout() {
-    let nama = document.getElementById("nama").value;
-    let alamat = document.getElementById("alamat").value;
-    let nohp = document.getElementById("nohp").value;
-    let catatan = document.getElementById("catatan").value;
+    let nama = document.getElementById("nama").value.trim();
+    let alamat = document.getElementById("alamat").value.trim();
+    let nohp = document.getElementById("nohp").value.trim(); // ✅ FIX
+    let catatan = document.getElementById("catatan").value.trim();
     let ongkir = parseInt(document.getElementById("jarak").value) || 0;
 
-    // Validasi data
+    // ✅ VALIDASI DI ATAS (WAJIB)
     if (!nama || !alamat || !nohp || cart.length === 0) {
         alert("Lengkapi Data Nama, Alamat, No HP, dan Pilih Menu dulu ya!");
         return;
     }
 
-    // Mulai menyusun pesan
-    let text = `*HALO ALUNA EATS*\n\n`;
-    text += `*Data Pemesan:*\n👤 Nama: ${nama}\n📍 Alamat: ${alamat}\n📱 No HP: ${nohp}\n`;
+    // ✅ SIMPAN DATA
+    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("nama", nama);
+    localStorage.setItem("alamat", alamat);
+    localStorage.setItem("nohp", nohp);
+    localStorage.setItem("catatan", catatan);
+    localStorage.setItem("ongkir", ongkir);
 
-    // Menambahkan catatan jika ada
-    if (catatan) {
-        text += `📝 Catatan: ${catatan}\n`;
-    }
-
-    text += `\n*Pesanan:*\n`;
-
-    // Menambah daftar item dari keranjang
-    cart.forEach(c => {
-        let item = items[c.index];
-        text += `- ${item.name} ${c.tipe} ${c.level ? '(Lvl '+c.level+')' : ''} x${c.qty}\n`;
-    });
-
-    // Menghitung total
-    let totalAll = cart.reduce((sum, c) => sum + (items[c.index].price * c.qty), 0) + ongkir;
-    
-    text += `\n*Ongkir:* Rp ${ongkir.toLocaleString('id-ID')}\n`;
-    text += `*TOTAL BAYAR: Rp ${totalAll.toLocaleString('id-ID')}*\n\n`;
-
-    text += `Mohon segera diproses ya 🙏`;
-
-    // Kirim ke WhatsApp
-    window.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-}  
-
+    // ✅ PINDAH HALAMAN (INI YANG KAMU MAU)
+    window.location.href = "checkout.html";
+}
 // Inisialisasi awal
 render();
 updateUI();
