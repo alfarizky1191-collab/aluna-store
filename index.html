@@ -1,202 +1,211 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ALUNA STORE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALUNA STORE</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
 
-    body {
-      background: url('abg.png') no-repeat center center/cover;
-      color: white;
-      position: relative;
-      min-height: 100vh;
-      animation: zoomBg 20s infinite alternate;
-    }
+body{
+  background:url('abg.png') no-repeat center/cover;
+  color:white;
+  min-height:100vh;
+  animation:zoomBg 20s infinite alternate;
+}
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.45);
-      z-index: -1;
-    }
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  z-index:-1;
+}
 
-    @keyframes zoomBg {
-      from { background-size: 100%; }
-      to { background-size: 110%; }
-    }
+@keyframes zoomBg{
+  from{background-size:100%}
+  to{background-size:110%}
+}
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      padding: 20px 40px;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(10px);
-    }
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+  backdrop-filter:blur(10px);
+}
 
-    header h1 {
-      color: #38bdf8;
-    }
+header h1{
+  color:#38bdf8;
+  font-size:20px;
+}
 
-    nav a {
-      margin-left: 20px;
-      text-decoration: none;
-      color: white;
-      opacity: 0.8;
-    }
+/* NAV */
+nav a{
+  margin-left:15px;
+  text-decoration:none;
+  color:white;
+  opacity:0.7;
+  font-size:14px;
+}
 
-    nav a:hover {
-      opacity: 1;
-    }
+nav a:hover{
+  opacity:1;
+}
 
-    .hero {
-      height: 90vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      backdrop-filter: blur(6px);
-    }
+/* HERO */
+.hero{
+  height:80vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
 
-    .hero h2 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-    }
+.hero h2{
+  font-size:2.5rem;
+}
 
-    .hero p {
-      opacity: 0.8;
-      max-width: 500px;
-      margin-bottom: 30px;
-    }
+.hero p{
+  opacity:0.8;
+  margin:10px 0 20px;
+}
 
-    .btn {
-      padding: 12px 25px;
-      background: #38bdf8;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      color: black;
-      font-weight: bold;
-      transition: 0.3s;
-    }
+.btn{
+  padding:12px 25px;
+  background:#38bdf8;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-    .btn:hover {
-      background: #0ea5e9;
-      transform: scale(1.05);
-    }
+/* FEATURES */
+.features{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:15px;
+  padding:20px;
+}
 
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 50px;
-    }
+/* CARD */
+.card{
+  background:rgba(0,0,0,0.5);
+  padding:20px;
+  border-radius:15px;
+  text-decoration:none;
+  color:white;
 
-    /* ===== DOODLE STYLE CARD ===== */
-    .card {
-      background: rgba(0,0,0,0.5);
-      padding: 20px;
-      border-radius: 12px;
-      backdrop-filter: blur(5px);
+  opacity:0;
+  transform:scale(0.7) rotate(-8deg);
+  transition:0.5s ease;
+}
 
-      opacity: 0;
-      transform: scale(0.7) rotate(-8deg);
-      transition: 0.5s ease;
-      cursor: pointer;
-    }
+.card.show{
+  opacity:1;
+  transform:scale(1) rotate(0);
+}
 
-    .card.show {
-      opacity: 1;
-      transform: scale(1) rotate(0deg);
-      animation: pop 0.4s ease;
-    }
+.card:hover{
+  transform:scale(1.05);
+  background:rgba(0,0,0,0.7);
+}
 
-    .card:hover {
-      transform: translateY(-5px) scale(1.03);
-      background: rgba(0,0,0,0.7);
-    }
+/* ICON */
+.icon{
+  width:28px;
+  height:28px;
+  margin-bottom:8px;
+  fill:#38bdf8;
+}
 
-    @keyframes pop {
-      0% { transform: scale(0.5) rotate(-10deg); }
-      60% { transform: scale(1.1) rotate(5deg); }
-      100% { transform: scale(1) rotate(0deg); }
-    }
+/* FOOTER */
+footer{
+  text-align:center;
+  opacity:.6;
+  padding:20px;
+}
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      opacity: 0.7;
-    }
-
-    @media (max-width: 600px) {
-      .hero h2 {
-        font-size: 2rem;
-      }
-    }
-  </style>
+@media(max-width:600px){
+  .hero h2{font-size:2rem;}
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <h1>ALUNA STORE</h1>
-    <nav>
-      <a href="#">Home</a>
-      <a href="https://alfarizky1191-collab.github.io/alunaeats/" target="_blank">Food</a>
-      <a href="#">Diecast</a>
-     <a href="apps/">Premium Apps</a>
-    </nav>
-  </header>
+<header>
+  <h1>ALUNA STORE</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="food/index.html">Food</a>
+    <a href="#">Diecast</a>
+    <a href="apps/index.html">Apps</a>
+  </nav>
+</header>
 
-  <section class="hero">
-    <h2>Aluna Store</h2>
-    <p>Find your needs in one click.</p>
-    <button class="btn">Get Started</button>
-  </section>
+<section class="hero">
+  <h2>Aluna Store</h2>
+  <p>Find your needs in one click.</p>
+  <button class="btn">Get Started</button>
+</section>
 
-  <section class="features">
-    <div class="card">
-      <h3>🚗 Diecast</h3>
-      <p>Koleksi mobil mini premium & unik.</p>
-    </div>
+<section class="features">
 
-    <div class="card">
-      <h3>📱 Premium Apps</h3>
-      <p>Akses aplikasi premium dengan harga terjangkau.</p>
-    </div>
+<!-- DIECAST -->
+<a href="#" class="card">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M3 13l1-3 2-2h12l2 2 1 3v5h-2v-2H5v2H3zM6 10l-1 2h14l-1-2H6z"/>
+  </svg>
+  <h3>Diecast</h3>
+  <p>Koleksi mobil mini premium & unik.</p>
+</a>
 
-    <div class="card" onclick="window.open('https://alfarizky1191-collab.github.io/alunaeats/')">
-      <h3>🍔 Food</h3>
-      <p>Makanan enak & kekinian buat nemenin santai.</p>
-    </div>
-  </section>
+<!-- APPS -->
+<a href="apps/index.html" class="card">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm6 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+  </svg>
+  <h3>Premium Apps</h3>
+  <p>Akses aplikasi premium dengan harga terjangkau.</p>
+</a>
 
-  <footer>
-    <p>© 2026 ALUNA STORE</p>
-  </footer>
+<!-- FOOD -->
+<a href="food/index.html" class="card">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M4 3h2v18H4zm4 0h2v10a2 2 0 11-2 0zm6 0h2v10a2 2 0 11-2 0zm4 0h2v18h-2z"/>
+  </svg>
+  <h3>Food</h3>
+  <p>Makanan enak & kekinian buat nemenin santai.</p>
+</a>
 
-  <!-- ===== SCRIPT CLICK ANIMATION ===== -->
-  <script>
-    const cards = document.querySelectorAll('.card');
-    let current = 0;
+</section>
 
-    document.addEventListener('click', () => {
-      if (current < cards.length) {
-        cards[current].classList.add('show');
-        current++;
-      }
-    });
-  </script>
+<footer>
+  © 2026 ALUNA STORE
+</footer>
+
+<script>
+/* ANIMASI CARD */
+const cards=document.querySelectorAll('.card');
+let i=0;
+
+document.addEventListener('click',()=>{
+  if(i<cards.length){
+    cards[i].classList.add('show');
+    i++;
+  }
+});
+</script>
 
 </body>
 </html>
