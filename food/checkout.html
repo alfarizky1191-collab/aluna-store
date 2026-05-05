@@ -113,12 +113,13 @@ input, textarea, select{
 <div class="box">
   <input id="nama" placeholder="Nama kamu">
   <input id="alamat" placeholder="Alamat lengkap">
+  <input id="no-hp" placeholder="Nomor HP">
   
   <select id="ongkir">
-    <option value="0">Ambil sendiri (Gratis)</option>
-    <option value="2000">Dekat (Rp 2.000)</option>
-    <option value="5000">Sedang (Rp 5.000)</option>
-    <option value="8000">Jauh (Rp 8.000)</option>
+    <option value="0">Ambil sendiri (Gratis)</option> 
+    <option value="3000">Dekat 0-2 km (Rp 3.000)</option>
+    <option value="8000">Sedang 2-5 km (Rp 8.000)</option>
+    <option value="15000">Jauh 5-8 km (Rp 15.000)</option>
   </select>
 
   <textarea id="catatan" placeholder="Catatan (opsional)"></textarea>
@@ -190,6 +191,7 @@ function order(){
 
   const nama = document.getElementById("nama").value.trim();
   const alamat = document.getElementById("alamat").value.trim();
+  const noHp = document.getElementById("no-hp").value.trim();
   const catatan = document.getElementById("catatan").value.trim();
   const ongkir = parseInt(document.getElementById("ongkir").value);
 

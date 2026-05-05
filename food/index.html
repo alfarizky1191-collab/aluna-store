@@ -57,20 +57,9 @@
     <p>⭐ Rating 4.9 | 🔥 100+ Pesanan | 🚀 Siap Antar </p>
 </div>
 
-<div class="form">
-    <b>📍 Data Pengiriman</b>
-    <input id="nama" placeholder="Nama Lengkap">
-    <input id="alamat" placeholder="Alamat Detail (No. Rumah/Patokan)">
-    <input id="nohp" placeholder="Nomor Hp Kamu">
-    <input id="catatan" placeholder="Catatan Tambahan">
-    <select id="jarak" onchange="updateTotal()">
-        <option value="0">-- Pilih Jarak Antar --</option>
-        <option value="0">🔵 Ambil Sendiri (Gratis)</option>
-        <option value="2000">🟢 Dekat (Rp 2.000)</option>
-        <option value="5000">🟡 Sedang (Rp 5.000)</option>
-        <option value="8000">🔴 Jauh (Rp 8.000)</option>
-    </select>
-</div>
+
+    
+
 
 <div class="grid" id="menu"></div>
 
@@ -93,18 +82,19 @@
             <span>Total Akhir:</span>
             <span id="modal-total-display" style="color:var(--primary)">Rp 0</span>
         </div>
-        <button class="btn-checkout" style="width:100%; margin-top:20px; padding:15px" onclick="checkout()">🚀 Pesan Sekarang (WhatsApp)</button>
+        <button class="btn-checkout" style="width:100%; margin-top:20px; padding:15px" onclick="checkout()">🚀 Pesan Sekarang </button>
         <button onclick="toggleModal(false)" style="width:100%; background:none; border:none; color:gray; margin-top:15px; cursor:pointer">Kembali Belanja</button>
     </div>
 </div>
 
 <script>
 const phone = "6289656009717";
+
 const items = [
     {name:"Batagor", price:5000, img:"https://i.imgur.com/JiFateR.jpeg", best:true, tipe:true},
-    {name:"Mie Level", price:8000, level:true, img:"https://i.imgur.com/u6FXtL7.jpeg", best:true,},
+    {name:"Mie Level", price:8000, level:true, img:"https://i.imgur.com/u6FXtL7.jpeg", best:true},
     {name:"Cilok", price:5000, img:"https://i.imgur.com/xvHP2rG.jpeg"},
-    {name:"Es Potong", price:1000, img:"https://i.imgur.com/3ilf7yY.jpeg",},
+    {name:"Es Potong", price:1000, img:"https://i.imgur.com/3ilf7yY.jpeg"},
     {name:"Suki Bakar", price:5000, img:"https://i.imgur.com/LPkTB2B.jpeg"},
     {name:"Sosis Bakar", price:5000, img:"https://i.imgur.com/ZxwgE0.jpeg"},
     {name:"Jasuke", price:5000, img:"https://i.imgur.com/OGNZogQ.jpeg"}
@@ -112,146 +102,163 @@ const items = [
 
 let cart = [];
 
+/* RENDER MENU */
 function render() {
     let html = "";
     items.forEach((item, i) => {
         let options = "";
+
         if (item.level) {
-            options += `<select id="level-${i}"><option value="0">Level 0</option><option value="1/2">Level 1/2</option><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select>`;
+            options += `<select id="level-${i}">
+                <option value="0">Level 0</option>
+                <option value="1/2">Level 1/2</option>
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+            </select>`;
         }
+
         if (item.tipe) {
-            options += `<select id="tipe-${i}"><option value="Kuah">Kuah</option><option value="Kering">Kering</option></select>`;
+            options += `<select id="tipe-${i}">
+                <option value="Kuah">Kuah</option>
+                <option value="Kering">Kering</option>
+            </select>`;
         }
 
         html += `
-            <div class="card">
-                <div class="image-box">
-                    ${item.best ? '<div class="badge">🔥 BEST</div>' : ''}
-                    <img src="${item.img}">
+        <div class="card">
+            <div class="image-box">
+                ${item.best ? '<div class="badge">🔥 BEST</div>' : ''}
+                <img src="${item.img}">
+            </div>
+            <div style="padding:10px">
+                <div style="font-weight:600">${item.name}</div>
+                <div style="color:var(--primary)">Rp ${item.price}</div>
+                ${options}
+                <div class="qty">
+                    <button class="btn-qty" onclick="changeQty(${i}, -1)">-</button>
+                    <b id="qty-disp-${i}">0</b>
+                    <button class="btn-qty" onclick="changeQty(${i}, 1)">+</button>
                 </div>
-                <div style="padding:10px">
-                    <div style="font-weight:600; font-size:14px; height:35px">${item.name}</div>
-                    <div style="color:var(--primary); font-weight:bold; margin-bottom:5px">Rp ${item.price}</div>
-                    ${options}
-                    <div class="qty">
-                        <button class="btn-qty" onclick="changeQty(${i}, -1)">-</button>
-                        <b id="qty-disp-${i}">0</b>
-                        <button class="btn-qty" onclick="changeQty(${i}, 1)">+</button>
-                    </div>
-                </div>
-            </div>`;
+            </div>
+        </div>`;
     });
+
     document.getElementById("menu").innerHTML = html;
 }
 
+/* CHANGE QTY */
 function changeQty(index, delta) {
     let level = document.getElementById(`level-${index}`)?.value || "";
     let tipe = document.getElementById(`tipe-${index}`)?.value || "";
     let key = `${index}-${level}-${tipe}`;
     let item = items[index];
 
-
     if(item.level && !level){
-    alert("Pilih level dulu!");
-    return;
-}
+        alert("Pilih level dulu!");
+        return;
+    }
 
     if(item.tipe && !tipe){
-    alert("Pilih tipe dulu!");
-    return;
-}
+        alert("Pilih tipe dulu!");
+        return;
+    }
 
     let found = cart.find(c => c.key === key);
 
     if (found) {
         found.qty += delta;
-        if (found.qty <= 0) cart = cart.filter(c => c.key !== key);
+        if (found.qty <= 0) {
+            cart = cart.filter(c => c.key !== key);
+        }
     } else if (delta > 0) {
         cart.push({ key, index, qty: 1, level, tipe });
     }
-    
+
     updateUI();
 }
 
+/* REMOVE */
 function removeItem(key) {
     cart = cart.filter(c => c.key !== key);
     updateUI();
     renderCartList();
 }
 
+/* UPDATE UI (FIX TOTAL DI SINI) */
 function updateUI() {
-    // Update angka di setiap card
+    // update qty di card
     items.forEach((_, i) => {
-        let totalQty = cart.filter(c => c.index === i).reduce((sum, c) => sum + c.qty, 0);
+        let totalQty = cart
+            .filter(c => c.index === i)
+            .reduce((sum, c) => sum + c.qty, 0);
+
         document.getElementById(`qty-disp-${i}`).innerText = totalQty;
     });
 
-    // Update Bar Bawah
-    let totalHarga = cart.reduce((sum, c) => sum + (items[c.index].price * c.qty), 0);
+    // total harga
+    let totalHarga = cart.reduce((sum, c) => {
+        return sum + (items[c.index].price * c.qty);
+    }, 0);
+
     let totalItem = cart.reduce((sum, c) => sum + c.qty, 0);
-    let ongkir = parseInt(document.getElementById("jarak").value) || 0;
 
     document.getElementById("cart-count").innerText = totalItem;
-    document.getElementById("total-price").innerText = (totalHarga + ongkir).toLocaleString('id-ID');
-    document.getElementById("modal-total-display").innerText = "Rp " + (totalHarga + ongkir).toLocaleString('id-ID');
+    document.getElementById("total-price").innerText = totalHarga.toLocaleString("id-ID");
+    document.getElementById("modal-total-display").innerText = "Rp " + totalHarga.toLocaleString("id-ID");
 }
 
+/* MODAL */
 function toggleModal(show) {
     document.getElementById("cartModal").style.display = show ? "block" : "none";
     if(show) renderCartList();
 }
 
+/* RENDER CART */
 function renderCartList() {
     let listDiv = document.getElementById("cart-list");
     let emptyMsg = document.getElementById("empty-msg");
+
     listDiv.innerHTML = "";
-    
+
     if (cart.length === 0) {
         emptyMsg.style.display = "block";
         return;
     }
-    
+
     emptyMsg.style.display = "none";
+
     cart.forEach(c => {
         let item = items[c.index];
+
         let row = document.createElement("div");
         row.className = "cart-item";
+
         row.innerHTML = `
-            <div>
-                <b>${item.name}</b> <small>${c.tipe} ${c.level ? 'Lvl '+c.level : ''}</small><br>
-                <span>${c.qty} x Rp ${item.price}</span>
-            </div>
-            <button class="btn-del" onclick="removeItem('${c.key}')">Hapus</button>
+        <div>
+            <b>${item.name}</b>
+            <small>${c.tipe} ${c.level ? 'Lvl '+c.level : ''}</small><br>
+            <span>${c.qty} x Rp ${item.price}</span>
+        </div>
+        <button class="btn-del" onclick="removeItem('${c.key}')">Hapus</button>
         `;
+
         listDiv.appendChild(row);
     });
 }
 
+/* CHECKOUT */
 function checkout() {
-    let nama = document.getElementById("nama").value.trim();
-    let alamat = document.getElementById("alamat").value.trim();
-    let nohp = document.getElementById("nohp").value.trim(); // ✅ FIX
-    let catatan = document.getElementById("catatan").value.trim();
-    let ongkir = parseInt(document.getElementById("jarak").value) || 0;
-
-    // ✅ VALIDASI DI ATAS (WAJIB)
-    if (!nama || !alamat || !nohp || cart.length === 0) {
-        alert("Lengkapi Data Nama, Alamat, No HP, dan Pilih Menu dulu ya!");
+    if (cart.length === 0) {
+        alert("Pilih menu dulu!");
         return;
     }
 
-    // ✅ SIMPAN DATA
     localStorage.setItem("cart", JSON.stringify(cart));
-    localStorage.setItem("nama", nama);
-    localStorage.setItem("alamat", alamat);
-    localStorage.setItem("nohp", nohp);
-    localStorage.setItem("catatan", catatan);
-    localStorage.setItem("ongkir", ongkir);
-
-    // ✅ PINDAH HALAMAN (INI YANG KAMU MAU)
     window.location.href = "checkout.html";
 }
-// Inisialisasi awal
+
+/* INIT */
 render();
 updateUI();
 </script>
