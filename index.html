@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aluna Store - Premium Apps, Food, Diecast dan kebutuhan digital lainnya.">
+<meta name="keywords" content="aluna store,premium apps,food,diecast,digital store">
+<meta name="theme-color" content="#38bdf8">
 <title>ALUNA STORE</title>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J83J8QQFDW"></script>
@@ -10,8 +13,10 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
+
   gtag('config', 'G-J83J8QQFDW');
-  </script>
+</script>
+
 <style>
 *{
   margin:0;
@@ -19,6 +24,7 @@
   box-sizing:border-box;
   font-family:'Segoe UI',sans-serif;
 }
+
 body{
   background:url('abg.png') no-repeat center/cover;
   color:white;
@@ -200,17 +206,28 @@ footer{
   © 2026 ALUNA STORE
 </footer>
 
-<script>
-/* ANIMASI CARD */
-const cards=document.querySelectorAll('.card');
-let i=0;
 
-document.addEventListener('click',()=>{
-  if(i<cards.length){
-    cards[i].classList.add('show');
-    i++;
-  }
+<script>
+/* ANIMASI CARD AUTO SAAT TERLIHAT */
+const cards = document.querySelectorAll('.card');
+
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+    }
+
+  });
+},{
+  threshold:0.2
 });
+
+cards.forEach(card=>{
+  observer.observe(card);
+})
+</script>
+  
 </script>
 
 </body>
