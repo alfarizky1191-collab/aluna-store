@@ -97,7 +97,7 @@ const items = [
     {name:"Es Potong Milo (full)", price:4000, img:"https://i.imgur.com/3ilf7yY.jpeg"},
     {name:"Es Potong Milo (half)", price:2000, img:"https://i.imgur.com/3ilf7yY.jpeg"},
     {name: "Es Potong Real good (full)", price:2000, img:"https://i.imgur.com/3ilf7yY.jpeg"},
-    {name: "Es Potong Real good (half)", price:1000, img:"https://i.imgur.com/3ilf7yY.jpeg"},
+    {name: "Es Potong Real good (1/2)", price:1000, img:"https://i.imgur.com/3ilf7yY.jpeg"},
     {name:"Suki Bakar", price:5000, img:"https://i.imgur.com/LPkTB2B.jpeg"},
     {name:"Sosis Bakar", price:5000, img:"https://i.imgur.com/ZxwgE0.jpeg"},
     {name:"Jasuke", price:5000, img:"https://i.imgur.com/OGNZogQ.jpeg"}
@@ -121,6 +121,15 @@ function render() {
             </select>`;
         }
          if (item.name==="Es Potong Real good (full)") {
+            options += `<select id="level-${i}">
+                <option value="coklat">coklat</option>
+                <option value="strawberry">strawberry</option>
+                <option value="blueberry">blueberry</option>
+                <option value="guava">guava</option>
+                <option value="blackcurrant">blackcurrant</option>
+            </select>`;
+        }
+        if (item.name==="Es Potong Real good (1/2)") {
             options += `<select id="level-${i}">
                 <option value="coklat">coklat</option>
                 <option value="strawberry">strawberry</option>
