@@ -5,132 +5,450 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>ALUNA STORE</title>
-  <meta name="description" content="ALUNA Store menyediakan katalog premium apps dan food dalam satu website ringan, cepat, dan mudah checkout lewat WhatsApp.">
-  <meta property="og:title" content="ALUNA STORE">
-  <meta property="og:description" content="Langganan aplikasi premium, jajanan favorit, dan produk pilihan ALUNA dalam satu tempat.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://alfarizky1191-collab.github.io/alunaweb/">
-  <meta property="og:image" content="https://alfarizky1191-collab.github.io/alunaweb/assets/images/abg.png">
-  <link rel="canonical" href="https://alfarizky1191-collab.github.io/alunaweb/">
 
-  <link rel="stylesheet" href="./assets/css/style.css">
-  <link rel="icon" href="./assets/images/favicon.svg" type="image/svg+xml">
+  <!-- SEO -->
+  <meta name="description"
+  content="ALUNA STORE - Premium Apps, Food, Diecast dan kebutuhan digital lainnya.">
+
+  <meta name="keywords"
+  content="aluna store,premium apps,food,diecast,digital store">
+
+  <meta name="theme-color"
+  content="#38bdf8">
+
+  <!-- OPEN GRAPH -->
+  <meta property="og:title"
+  content="ALUNA STORE">
+
+  <meta property="og:description"
+  content="Premium Apps, Food, Diecast dan kebutuhan digital lainnya.">
+
+  <meta property="og:type"
+  content="website">
+
+  <meta property="og:url"
+  content="https://alunastore.my.id/">
 
   <!-- SECURITY -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline'
+  https://www.googletagmanager.com
+  https://www.google-analytics.com;
 
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  connect-src 'self'
+  https://www.google-analytics.com;
 
-  <meta http-equiv="Referrer-Policy"
-  content="strict-origin-when-cross-origin">
+  style-src 'self' 'unsafe-inline';
 
-  <meta http-equiv="Permissions-Policy"
-  content="camera=(), microphone=(), geolocation=()">
+  img-src 'self' data: https:;
+  font-src 'self' data:;
+  object-src 'none';
+  base-uri 'self';
+  ">
 
-  <meta http-equiv="X-Frame-Options"
-  content="DENY">
+  <!-- GOOGLE ANALYTICS -->
+  <script async
+  src="https://www.googletagmanager.com/gtag/js?id=G-J83J8QQFDW">
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag(){
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-J83J8QQFDW');
+  </script>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Segoe UI',sans-serif;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:
+      linear-gradient(
+        rgba(0,0,0,0.55),
+        rgba(0,0,0,0.55)
+      ),
+      url('./assets/images/abg.png')
+      no-repeat center center/cover;
+
+      color:white;
+      min-height:100vh;
+      animation:zoomBg 20s infinite alternate;
+    }
+
+    @keyframes zoomBg{
+      from{
+        background-size:100%;
+      }
+
+      to{
+        background-size:110%;
+      }
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:100;
+
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+
+      padding:18px 24px;
+
+      backdrop-filter:blur(12px);
+
+      background:rgba(0,0,0,0.25);
+    }
+
+    header h1{
+      color:#38bdf8;
+      font-size:20px;
+      letter-spacing:1px;
+    }
+
+    nav{
+      display:flex;
+      gap:16px;
+    }
+
+    nav a{
+      text-decoration:none;
+      color:white;
+      opacity:0.75;
+      transition:0.3s;
+      font-size:14px;
+    }
+
+    nav a:hover{
+      opacity:1;
+      color:#38bdf8;
+    }
+
+    .hero{
+      min-height:85vh;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+
+      text-align:center;
+      padding:24px;
+    }
+
+    .hero h2{
+      font-size:clamp(2.5rem,6vw,4.5rem);
+      margin-bottom:16px;
+    }
+
+    .hero p{
+      max-width:650px;
+      opacity:0.85;
+      line-height:1.6;
+      margin-bottom:28px;
+      font-size:1rem;
+    }
+
+    .hero-buttons{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .btn{
+      padding:14px 28px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .btn-primary{
+      background:#38bdf8;
+      color:black;
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-3px);
+    }
+
+    .btn-secondary{
+      border:1px solid rgba(255,255,255,0.3);
+      color:white;
+      background:rgba(255,255,255,0.08);
+    }
+
+    .btn-secondary:hover{
+      background:rgba(255,255,255,0.15);
+    }
+
+    .features{
+      display:grid;
+      grid-template-columns:
+      repeat(auto-fit,minmax(240px,1fr));
+
+      gap:24px;
+
+      padding:40px 24px 80px;
+
+      max-width:1200px;
+      margin:auto;
+    }
+
+    .card{
+      background:rgba(0,0,0,0.45);
+
+      border:1px solid rgba(255,255,255,0.08);
+
+      border-radius:20px;
+
+      padding:28px;
+
+      text-decoration:none;
+      color:white;
+
+      transition:0.4s ease;
+
+      opacity:0;
+      transform:translateY(40px);
+    }
+
+    .card.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .card:hover{
+      transform:translateY(-8px);
+      background:rgba(0,0,0,0.65);
+    }
+
+    .icon{
+      width:30px;
+      height:30px;
+
+      fill:#38bdf8;
+
+      margin-bottom:14px;
+    }
+
+    .card h3{
+      margin-bottom:10px;
+    }
+
+    .card p{
+      opacity:0.8;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    footer{
+      text-align:center;
+      padding:28px;
+      opacity:0.6;
+      font-size:14px;
+    }
+
+    @media(max-width:768px){
+
+      header{
+        flex-direction:column;
+        gap:12px;
+      }
+
+      nav{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+
+      .hero h2{
+        font-size:2.6rem;
+      }
+
+    }
+
+  </style>
 
 </head>
 
-<body class="home-page">
+<body>
 
-  <header class="site-header">
-    <a class="brand" href="./index.html">ALUNA STORE</a>
+  <header>
 
-    <nav class="top-nav" aria-label="Navigasi utama">
-      <a href="./pages/apps/index.html">Apps</a>
-      <a href="./pages/food/index.html">Food</a>
+    <h1>ALUNA STORE</h1>
+
+    <nav>
+      <a href="./index.html">Home</a>
+
+      <a href="./pages/apps/index.html">
+        Apps
+      </a>
+
+      <a href="./pages/food/index.html">
+        Food
+      </a>
+
+      <a href="#">
+        Diecast
+      </a>
     </nav>
+
   </header>
 
-  <main>
+  <section class="hero">
 
-    <section class="hero">
-      <div class="hero-content">
-        <p class="eyebrow">Premium digital and daily treats</p>
+    <h2>
+      Find Your Needs In One Click
+    </h2>
 
-        <h1>Find your needs in one click.</h1>
+    <p>
+      Premium apps, makanan favorit,
+      diecast, dan kebutuhan digital lainnya
+      dalam satu tempat yang modern,
+      cepat, dan nyaman digunakan.
+    </p>
 
-        <p class="hero-copy">
-          Langganan aplikasi premium, jajanan favorit,
-          dan produk pilihan ALUNA dalam satu tempat
-          yang rapi dan cepat.
-        </p>
+    <div class="hero-buttons">
 
-        <div class="hero-actions">
-          <a class="btn primary" href="./pages/apps/index.html">
-            Lihat Apps
-          </a>
+      <a
+      class="btn btn-primary"
+      href="./pages/apps/index.html">
 
-          <a class="btn secondary" href="./pages/food/index.html">
-            Pesan Food
-          </a>
-        </div>
-      </div>
-    </section>
+        Lihat Apps
 
-    <section class="section-shell">
+      </a>
 
-      <div class="section-heading">
-        <p class="eyebrow">Kategori</p>
-        <h2>Pilih kebutuhanmu</h2>
-      </div>
+      <a
+      class="btn btn-secondary"
+      href="./pages/food/index.html">
 
-      <div class="category-grid">
+        Pesan Food
 
-        <a class="category-card apps-card"
-        href="./pages/apps/index.html">
+      </a>
 
-          <span class="category-icon">AP</span>
+    </div>
 
-          <h3>Premium Apps</h3>
+  </section>
 
-          <p>
-            Netflix, Spotify, Canva, ChatGPT,
-            dan layanan digital lainnya.
-          </p>
+  <section class="features">
 
-          <span class="card-link">Buka katalog</span>
-        </a>
+    <!-- APPS -->
+    <a
+    href="./pages/apps/index.html"
+    class="card">
 
-        <a class="category-card food-card"
-        href="./pages/food/index.html">
+      <svg class="icon"
+      viewBox="0 0 24 24">
 
-          <span class="category-icon">FD</span>
+        <path d="M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm6 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
 
-          <h3>Aluna Food</h3>
+      </svg>
 
-          <p>
-            Street food, minuman dingin,
-            dan camilan siap pesan.
-          </p>
+      <h3>Premium Apps</h3>
 
-          <span class="card-link">Buka menu</span>
-        </a>
+      <p>
+        Netflix, Spotify, Canva,
+        ChatGPT dan layanan premium lainnya.
+      </p>
 
-      </div>
-    </section>
+    </a>
 
-    <section class="section-shell products-wrapper">
+    <!-- FOOD -->
+    <a
+    href="./pages/food/index.html"
+    class="card">
 
-      <div class="section-heading">
-        <p class="eyebrow">Produk cepat</p>
-        <h2>Rekomendasi hari ini</h2>
-      </div>
+      <svg class="icon"
+      viewBox="0 0 24 24">
 
-      <div
-        id="products"
-        class="product-grid"
-        aria-live="polite">
-      </div>
+        <path d="M4 3h2v18H4zm4 0h2v10a2 2 0 11-2 0zm6 0h2v10a2 2 0 11-2 0zm4 0h2v18h-2z"/>
 
-    </section>
+      </svg>
 
-  </main>
+      <h3>Food</h3>
 
-  <script src="./assets/js/shared.js"></script>
-  <script src="./assets/js/app.js"></script>
+      <p>
+        Makanan enak, minuman segar,
+        dan camilan favorit siap dipesan.
+      </p>
+
+    </a>
+
+    <!-- DIECAST -->
+    <a
+    href="#"
+    class="card">
+
+      <svg class="icon"
+      viewBox="0 0 24 24">
+
+        <path d="M3 13l1-3 2-2h12l2 2 1 3v5h-2v-2H5v2H3zM6 10l-1 2h14l-1-2H6z"/>
+
+      </svg>
+
+      <h3>Diecast</h3>
+
+      <p>
+        Koleksi mobil mini premium
+        dan item collectible pilihan.
+      </p>
+
+    </a>
+
+  </section>
+
+  <footer>
+    © 2026 ALUNA STORE
+  </footer>
+
+  <script>
+
+    const cards =
+      document.querySelectorAll('.card');
+
+    const observer =
+      new IntersectionObserver((entries)=>{
+
+        entries.forEach((entry)=>{
+
+          if(entry.isIntersecting){
+
+            entry.target.classList.add('show');
+
+          }
+
+        });
+
+      },{
+        threshold:0.15
+      });
+
+    cards.forEach((card)=>{
+
+      observer.observe(card);
+
+    });
+
+  </script>
 
 </body>
 </html>
