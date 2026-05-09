@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Netflix Premium",
+    "category": "apps",
+    "description": "Streaming premium tanpa batas.",
+    "link": "./apps/index.html"
+  },
+
+  {
+    "name": "Spotify Premium",
+    "category": "apps",
+    "description": "Musik tanpa iklan kualitas tinggi.",
+    "link": "./apps/index.html"
+  },
+
+  {
+    "name": "Mie Level",
+    "category": "food",
+    "description": "Mie pedas dengan rasa premium dan topping melimpah.",
+    "link": "./food/index.html"
+  },
+
+  {
+    "name": "Es Potong",
+    "category": "food",
+    "description": "Minuman dingin segar untuk santai.",
+    "link": "./food/index.html"
+  }
+]

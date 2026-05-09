@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<!-- Content Security Policy -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
+
+<!-- SEO -->
+
+<meta
+name="description"
+content="ALUNA STORE - Premium Apps, Food dan kebutuhan digital lainnya.">
+
+<meta
+name="keywords"
+content="aluna store,premium apps,food,netflix,spotify,jajanan">
+
+<meta
+name="robots"
+content="index, follow">
+
+<meta
+name="theme-color"
+content="#38bdf8">
+
+<link
+rel="canonical"
+href="https://alunastore.my.id/">
+
+<!-- OPEN GRAPH -->
+
+<meta
+property="og:title"
+content="ALUNA STORE">
+
+<meta
+property="og:description"
+content="Premium Apps, Food, dan kebutuhan digital lainnya.">
+
+<meta
+property="og:type"
+content="website">
+
+<meta
+property="og:url"
+content="https://alunastore.my.id/">
+
+<meta
+property="og:image"
+content="https://alunastore.my.id/abg.png">
+
+<title>ALUNA STORE</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "name": "ALUNA STORE",
+  "url": "https://alunastore.my.id/",
+  "description": "Premium Apps, Food dan kebutuhan digital lainnya.",
+  "image": "https://alunastore.my.id/abg.png",
+  "brand": {
+    "@type": "Brand",
+    "name": "ALUNA STORE"
+  },
+
+  "sameAs": [
+    "https://instagram.com/"
+  ]
+}
+</script>
+<!-- GOOGLE ANALYTICS -->
+
+<script async
+src="https://www.googletagmanager.com/gtag/js?id=G-J83J8QQFDW">
+</script>
+
+<script>
+
+window.dataLayer =
+window.dataLayer || [];
+
+function gtag(){
+  dataLayer.push(arguments);
+}
+
+gtag('js', new Date());
+
+gtag(
+  'config',
+  'G-J83J8QQFDW'
+);
+
+</script>
+
+<style>
+
+/* RESET */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+
+  color:white;
+
+  background:
+  linear-gradient(
+    rgba(0,0,0,.45),
+    rgba(0,0,0,.45)
+  ),
+  url('./abg.png')
+  no-repeat center center/cover;
+
+  min-height:100vh;
+
+  overflow-x:hidden;
+}
+
+/* HEADER */
+
+header{
+
+  position:sticky;
+  top:0;
+  z-index:100;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:22px 60px;
+
+  backdrop-filter:blur(14px);
+
+  background:
+  rgba(0,0,0,.18);
+
+}
+
+header h1{
+
+  font-size:20px;
+  font-weight:700;
+
+  letter-spacing:.5px;
+}
+
+/* NAV */
+
+nav{
+  display:flex;
+  gap:30px;
+}
+
+nav a{
+
+  text-decoration:none;
+
+  color:white;
+
+  opacity:.85;
+
+  font-size:15px;
+
+  transition:.3s ease;
+}
+
+nav a:hover{
+
+  opacity:1;
+
+  color:#38bdf8;
+}
+
+/* HERO */
+
+.hero{
+
+  padding:
+  90px
+  60px
+  120px;
+
+  max-width:900px;
+}
+
+.eyebrow{
+
+  color:#ff6b00;
+
+  font-weight:700;
+
+  margin-bottom:20px;
+
+  font-size:15px;
+}
+
+.hero h2{
+
+  font-size:
+  clamp(
+    3rem,
+    8vw,
+    6rem
+  );
+
+  line-height:.92;
+
+  margin-bottom:30px;
+
+  font-weight:800;
+}
+
+.hero p{
+
+  max-width:700px;
+
+  line-height:1.7;
+
+  font-size:1.15rem;
+
+  opacity:.92;
+}
+
+/* SECTION */
+
+.section{
+
+  padding:
+  0
+  60px
+  90px;
+}
+
+.section-label{
+
+  color:#ff6b00;
+
+  font-weight:700;
+
+  margin-bottom:10px;
+}
+
+.section h3{
+
+  font-size:3rem;
+
+  margin-bottom:35px;
+}
+
+/* CATEGORY CARD */
+
+.cards{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(
+    auto-fit,
+    minmax(320px,1fr)
+  );
+
+  gap:28px;
+}
+
+.card{
+
+  background:white;
+
+  color:#111;
+
+  border-radius:24px;
+
+  padding:38px;
+
+  text-decoration:none;
+
+  transition:.35s ease;
+
+  opacity:0;
+
+  transform:
+  translateY(45px);
+}
+
+.card.show{
+
+  opacity:1;
+
+  transform:
+  translateY(0);
+}
+
+.card:hover{
+
+  transform:
+  translateY(-8px);
+}
+
+.badge{
+
+  display:inline-block;
+
+  padding:
+  10px
+  14px;
+
+  border-radius:12px;
+
+  font-weight:700;
+
+  margin-bottom:25px;
+}
+
+.apps-badge{
+
+  background:#e6f4f1;
+
+  color:#008080;
+}
+
+.food-badge{
+
+  background:#ffeaea;
+
+  color:#ff4d4d;
+}
+
+.card h4{
+
+  font-size:2rem;
+
+  margin-bottom:18px;
+}
+
+.card p{
+
+  color:#666;
+
+  line-height:1.6;
+
+  margin-bottom:28px;
+}
+
+.card span{
+
+  color:#008080;
+
+  font-weight:700;
+}
+
+/* REKOMENDASI */
+
+.recommend-grid{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(
+    auto-fit,
+    minmax(240px,1fr)
+  );
+
+  gap:24px;
+}
+
+.recommend-card{
+
+  background:
+  rgba(255,255,255,.1);
+
+  backdrop-filter:blur(10px);
+
+  border:
+  1px solid rgba(255,255,255,.08);
+
+  border-radius:22px;
+
+  padding:25px;
+
+  text-decoration:none;
+
+  color:white;
+
+  transition:.3s ease;
+
+  opacity:0;
+
+  transform:
+  translateY(40px);
+}
+
+.recommend-card.show{
+
+  opacity:1;
+
+  transform:
+  translateY(0);
+}
+
+.recommend-card:hover{
+
+  transform:
+  translateY(-6px);
+
+  background:
+  rgba(255,255,255,.16);
+}
+
+.recommend-category{
+
+  color:#38bdf8;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  margin-bottom:12px;
+}
+
+.recommend-card h4{
+
+  margin-bottom:10px;
+
+  font-size:1.4rem;
+}
+
+.recommend-card p{
+
+  opacity:.85;
+
+  line-height:1.6;
+
+  font-size:14px;
+}
+
+/* FOOTER */
+
+footer{
+
+  text-align:center;
+
+  padding:30px;
+
+  opacity:.7;
+
+  font-size:14px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  header{
+
+    padding:20px;
+
+    flex-direction:column;
+
+    gap:16px;
+  }
+
+  nav{
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:20px;
+  }
+
+  .hero{
+
+    padding:
+    70px
+    20px
+    90px;
+  }
+
+  .hero h2{
+
+    font-size:3.6rem;
+  }
+
+  .hero p{
+
+    font-size:1rem;
+  }
+
+  .section{
+
+    padding:
+    0
+    20px
+    60px;
+  }
+
+  .section h3{
+
+    font-size:2.3rem;
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+  <h1>
+    ALUNA STORE
+  </h1>
+
+  <nav>
+
+    <a href="./index.html">
+      Home
+    </a>
+
+    <a href="./food/index.html">
+      Food
+    </a>
+
+    <a href="./apps/index.html">
+      Apps
+    </a>
+
+  </nav>
+
+</header>
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="eyebrow">
+    PREMIUM DIGITAL AND DAILY TREATS
+  </div>
+
+  <h2>
+    Find your needs in one click.
+  </h2>
+
+  <p>
+
+    Langganan aplikasi premium,
+    jajanan favorit,
+    dan produk pilihan ALUNA
+    dalam satu tempat yang rapi
+    dan cepat.
+
+  </p>
+
+</section>
+
+<!-- KATEGORI -->
+
+<section class="section">
+
+  <div class="section-label">
+    KATEGORI
+  </div>
+
+  <h3>
+    Pilih kebutuhanmu
+  </h3>
+
+  <div class="cards">
+
+    <!-- APPS -->
+
+    <a
+    href="./apps/index.html"
+    class="card">
+
+      <div
+      class="badge apps-badge">
+
+        AP
+
+      </div>
+
+      <h4>
+        Premium Apps
+      </h4>
+
+      <p>
+
+        Netflix,
+        Spotify,
+        Canva,
+        ChatGPT,
+        dan layanan digital lainnya.
+
+      </p>
+
+      <span>
+        Buka katalog
+      </span>
+
+    </a>
+
+    <!-- FOOD -->
+
+    <a
+    href="./food/index.html"
+    class="card">
+
+      <div
+      class="badge food-badge">
+
+        FD
+
+      </div>
+
+      <h4>
+        Aluna Food
+      </h4>
+
+      <p>
+
+        Street food,
+        minuman dingin,
+        dan camilan siap pesan.
+
+      </p>
+
+      <span>
+        Buka menu
+      </span>
+
+    </a>
+
+  </div>
+
+</section>
+
+<!-- REKOMENDASI -->
+
+<section class="section">
+
+  <div class="section-label">
+    PRODUK CEPAT
+  </div>
+
+  <h3>
+    Rekomendasi Hari Ini
+  </h3>
+
+  <div
+  id="recommendationContainer"
+  class="recommend-grid">
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+  © 2026 ALUNA STORE
+</footer>
+
+<!-- SCRIPT -->
+
+<script>
+
+/* ANIMATION */
+
+const animatedItems =
+document.querySelectorAll(
+'.card'
+);
+
+const observer =
+new IntersectionObserver(
+
+(entries)=>{
+
+  entries.forEach((entry)=>{
+
+    if(entry.isIntersecting){
+
+      entry.target
+      .classList
+      .add('show');
+
+    }
+
+  });
+
+},
+
+{
+  threshold:.2
+}
+
+);
+
+animatedItems.forEach((item)=>{
+
+  observer.observe(item);
+
+});
+
+/* DATA PRODUK */
+
+async function loadProducts() {
+  try {
+    const response = await fetch('./data/products.json');
+    const products = await response.json();
+    return products.map(product => ({
+      ...product,
+      category: product.category === 'apps' ? 'PREMIUM APPS' : 'ALUNA FOOD'
+    }));
+  } catch (error) {
+    console.error('Error loading products:', error);
+    return [];
+  }
+}
+
+/* RANDOM REKOMENDASI */
+
+async function loadRecommendations() {
+  const products = await loadProducts();
+  const container = document.getElementById('recommendationContainer');
+
+  const today = new Date().getDate();
+
+  const shuffled = [...products].sort(() => {
+    return (0.5 - Math.sin(today));
+  });
+
+  const selected = shuffled.slice(0, 4);
+
+  selected.forEach((product) => {
+    const card = document.createElement('a');
+    card.className = 'recommend-card';
+    card.href = product.link;
+
+    card.innerHTML = `
+    <div class="recommend-category">
+      ${product.category}
+    </div>
+    <h4>
+      ${product.name}
+    </h4>
+    <p>
+      ${product.description}
+    </p>
+    `;
+
+    container.appendChild(card);
+    observer.observe(card);
+  });
+}
+
+// Load recommendations on page load
+loadRecommendations();
+
+</script>
+
+</body>
+</html>

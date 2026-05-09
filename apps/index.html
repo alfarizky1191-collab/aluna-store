@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Content Security Policy -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<title>ALUNA Premium Apps</title>
+
+<style>
+body{margin:0;font-family:sans-serif;background:#f5f7fb;}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+  padding:15px;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 6px 15px rgba(0,0,0,0.1);
+}
+
+.card img{
+  width:100%;
+  height:140px;
+  object-fit:contain;
+  background:#fff;
+  padding:20px;
+}
+
+.content{padding:12px;}
+
+.title{font-weight:bold;}
+
+.price{color:#f97316;font-weight:bold;margin:5px 0;}
+
+select{
+  width:100%;
+  padding:8px;
+  border-radius:8px;
+  margin:8px 0;
+}
+
+.qty{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.qty button{
+  background:#f97316;
+  color:white;
+  border:none;
+  padding:5px 10px;
+  border-radius:6px;
+}
+
+.add{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  background:#22c55e;
+  border:none;
+  color:white;
+  border-radius:10px;
+}
+
+.cart{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-top:1px solid #ddd;
+  padding:10px;
+}
+body {
+  padding-bottom: 100px;
+}
+.cart {
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+}
+.cart {
+  max-width: 600px;
+  margin: auto;
+  left: 0;
+  right: 0;
+}
+.cart {
+  border-top: 1px solid #ddd;
+}
+.checkout-btn{
+  width:100%;
+  margin-top:10px;
+  padding:16px;
+  font-size:16px;
+  font-weight:bold;
+  border:none;
+  border-radius:12px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.checkout-btn:hover{
+  background:#1d4ed8;
+}
+
+.checkout-btn:active{
+  transform:scale(0.97);
+}
+.cart{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  padding:12px;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+
+<body>
+
+<div class="grid" id="grid"></div>
+
+<div class="cart">
+  <div id="total">Total: Rp 0</div>
+  <button class="checkout-btn" onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+const rupiah=n=>"Rp "+n.toLocaleString("id-ID");
+
+/* DATA FULL */
+const data=[
+{ name:"Netflix", img:"https://upload.wikimedia.org/wikipedia/commons/7/75/Netflix_icon.svg",
+options:[{label:"Sharing 35K",price:35000},{label:"Semi Private 45K",price:45000}]},
+
+{ name:"Spotify", img:"https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+options:[{label:"Famplan 29K",price:29000},{label:"Indplan 41K",price:41000}]},
+
+{ name:"ChatGPT", img:"https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+options:[{label:"Fulgur 15K",price:15000},{label:"Nogar 10K",price:10000}]},
+
+{ name:"Canva", img:"https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg",
+options:[{label:"1 Bulan 3K",price:3000},{label:"3 Bulan 10K",price:10000},{label:"1 Tahun 15K",price:15000}]},
+
+{ name:"YouTube", img:"https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg",
+options:[{label:"1 Bulan 5K",price:5000},{label:"3 Bulan 10K",price:10000}]},
+
+{ name:"CapCut", img:"https://upload.wikimedia.org/wikipedia/commons/6/64/CapCut_Logo.png",
+options:[{label:"Sharing 20K",price:20000}]},
+
+{ name:"Grammarly", img:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Grammarly_logo.svg",
+options:[{label:"1 Bulan 13K",price:13000},{label:"3 Bulan 24K",price:24000}]},
+
+{ name:"iQIYI", img:"https://upload.wikimedia.org/wikipedia/commons/6/6a/IQIYI_logo.svg",
+options:[{label:"Sharing 10K",price:10000},{label:"Private 35K",price:35000},{label:"1 Tahun 25K",price:25000}]},
+
+{ name:"WeTV", img:"https://upload.wikimedia.org/wikipedia/commons/2/2e/Tencent_Video_logo.svg",
+options:[{label:"Sharing 15K",price:15000},{label:"Private 35K",price:35000}]},
+
+{ name:"Amazon Prime", img:"https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video.png",
+options:[{label:"Sharing 10K",price:10000},{label:"Private 30K",price:30000}]},
+
+{ name:"VSCO", img:"https://upload.wikimedia.org/wikipedia/commons/3/3c/VSCO_Logo.png",
+options:[{label:"1 Tahun 20K",price:20000}]},
+
+{ name:"Lightroom", img:"https://upload.wikimedia.org/wikipedia/commons/4/4d/Adobe_Photoshop_Lightroom_CC_logo.svg",
+options:[{label:"1 Tahun 15K",price:15000}]},
+
+{ name:"PicsArt", img:"https://upload.wikimedia.org/wikipedia/commons/4/49/PicsArt_Logo.svg",
+options:[{label:"Sharing 10K",price:10000},{label:"Private 15K",price:15000}]},
+
+{ name:"Wattpad", img:"https://upload.wikimedia.org/wikipedia/commons/8/82/Wattpad_logo.png",
+options:[{label:"Sharing 15K",price:15000}]},
+
+{ name:"Telegram", img:"https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
+options:[{label:"3 Bulan 175K",price:175000}]},
+
+{ name:"LokLok", img:"https://upload.wikimedia.org/wikipedia/commons/3/3a/Popcorn.png",
+options:[{label:"Sharing 25K",price:25000}]},
+
+{ name:"Youku", img:"https://upload.wikimedia.org/wikipedia/commons/3/3c/Youku_logo.png",
+options:[{label:"1 Bulan 15K",price:15000},{label:"3 Bulan 24K",price:24000},{label:"1 Tahun 30K",price:30000}]},
+
+{ name:"Bstation", img:"https://upload.wikimedia.org/wikipedia/commons/1/12/Bilibili_logo.svg",
+options:[{label:"1 Bulan 15K",price:15000},{label:"1 Tahun 25K",price:25000}]},
+
+{ name:"GetContact", img:"https://upload.wikimedia.org/wikipedia/commons/0/02/Phone_icon.png",
+options:[{label:"1 Bulan 15K",price:15000}]}
+];
+
+let cart=[];
+const qtyState={};
+const grid=document.getElementById("grid");
+
+/* RENDER */
+function render(){
+  grid.innerHTML="";
+  data.forEach((p,i)=>{
+    let html=`
+    <div class="card">
+      <img src="${p.img}">
+      <div class="content">
+        <div class="title">${p.name}</div>
+        <div class="price">${p.options[0].label}</div>
+
+        <select id="opt-${i}">
+          ${p.options.map(o=>`<option value="${o.price}">${o.label}</option>`).join("")}
+        </select>
+
+        <div class="qty">
+          <button onclick="changeQty(${i},-1)">-</button>
+          <span id="qty-${i}">1</span>
+          <button onclick="changeQty(${i},1)">+</button>
+        </div>
+
+        <button class="add" onclick="add(${i})">Tambah</button>
+      </div>
+    </div>`;
+    grid.innerHTML+=html;
+  });
+}
+
+/* QTY */
+function changeQty(i,val){
+  qtyState[i]=(qtyState[i]||1)+val;
+  if(qtyState[i]<1) qtyState[i]=1;
+  document.getElementById(`qty-${i}`).innerText=qtyState[i];
+}
+
+/* ADD */
+function add(i){
+  const select=document.getElementById(`opt-${i}`);
+  const qty=qtyState[i]||1;
+
+  const found=cart.find(x=>x.name===data[i].name && x.label===select.options[select.selectedIndex].text);
+  if(found) found.qty+=qty;
+  else cart.push({
+    name:data[i].name,
+    label:select.options[select.selectedIndex].text,
+    price:parseInt(select.value),
+    qty
+  });
+
+  update();
+}
+
+/* CART */
+function update(){
+  let total=0;
+  cart.forEach(i=>total+=i.price*i.qty);
+  document.getElementById("total").innerText="Total: "+rupiah(total);
+}
+
+/* CHECKOUT */
+function checkout(){
+  if(cart.length===0) return alert("Keranjang kosong!");
+
+  // simpan cart
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // pindah halaman
+  location.href = "checkout.html";
+}
+
+/* INIT */
+render();
+</script>
+
+</body>
+</html>

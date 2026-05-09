@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alunastore.my.id/sitemap.xml
