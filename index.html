@@ -113,6 +113,8 @@ html{
   scroll-behavior:smooth;
 }
 
+/* BACKGROUND DESKTOP + MOBILE RESPONSIVE */
+
 body{
 
   color:white;
@@ -122,7 +124,7 @@ body{
     rgba(0,0,0,.45),
     rgba(0,0,0,.45)
   ),
-  url('./abg.png')
+  url('./abg-desktop.webp')
   no-repeat center center/cover;
 
   min-height:100vh;
@@ -130,7 +132,24 @@ body{
   overflow-x:hidden;
 }
 
-/* HEADER */
+/* MOBILE BACKGROUND */
+
+@media(max-width:768px){
+
+  body{
+
+    background:
+    linear-gradient(
+      rgba(0,0,0,.45),
+      rgba(0,0,0,.45)
+    ),
+    url('./abg-mobile.webp')
+    no-repeat center center/cover;
+
+  }
+
+}
+/* HEADER FIX - TETAP DI POSISI AWAL */
 
 header{
 
@@ -142,14 +161,15 @@ header{
   justify-content:space-between;
   align-items:center;
 
-  padding:22px 60px;
+  padding:18px 24px;
 
   backdrop-filter:blur(14px);
 
   background:
-  rgba(0,0,0,.18);
-
+  rgba(0,0,0,.25);
 }
+
+/* LOGO */
 
 header h1{
 
@@ -162,9 +182,15 @@ header h1{
 /* NAV */
 
 nav{
+
   display:flex;
-  gap:30px;
+  align-items:center;
+  gap:18px;
+
+  flex-wrap:wrap;
 }
+
+/* NAV LINK */
 
 nav a{
 
@@ -174,9 +200,11 @@ nav a{
 
   opacity:.85;
 
-  font-size:15px;
+  font-size:14px;
 
   transition:.3s ease;
+
+  white-space:nowrap;
 }
 
 nav a:hover{
@@ -184,6 +212,45 @@ nav a:hover{
   opacity:1;
 
   color:#38bdf8;
+}
+
+/* MOBILE FIX */
+/* TIDAK PINDAH KE BAWAH */
+
+@media(max-width:768px){
+
+  header{
+
+    flex-direction:row;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:16px 18px;
+  }
+
+  header h1{
+
+    font-size:18px;
+  }
+
+  nav{
+
+    width:auto;
+
+    justify-content:flex-end;
+
+    gap:14px;
+
+    flex-wrap:nowrap;
+  }
+
+  nav a{
+
+    font-size:13px;
+  }
+
 }
 
 /* HERO */
