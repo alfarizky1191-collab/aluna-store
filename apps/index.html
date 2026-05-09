@@ -8,135 +8,503 @@
 <title>ALUNA Premium Apps</title>
 
 <style>
-body{margin:0;font-family:sans-serif;background:#f5f7fb;}
+/* ===== APPS PAGE MODERN UI ===== */
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:15px;
-  padding:15px;
+/* BODY */
+
+body{
+
+  background:#f3f5f9;
+
+  color:#111827;
+
+  font-family:'Segoe UI',sans-serif;
 }
 
-.card{
-  background:white;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 6px 15px rgba(0,0,0,0.1);
-}
+/* HEADER */
 
-.card img{
-  width:100%;
-  height:140px;
-  object-fit:contain;
-  background:#fff;
-  padding:20px;
-}
+header{
 
-.content{padding:12px;}
+  position:sticky;
+  top:0;
+  z-index:100;
 
-.title{font-weight:bold;}
-
-.price{color:#f97316;font-weight:bold;margin:5px 0;}
-
-select{
-  width:100%;
-  padding:8px;
-  border-radius:8px;
-  margin:8px 0;
-}
-
-.qty{
   display:flex;
   justify-content:space-between;
   align-items:center;
+
+  padding:18px 32px;
+
+  background:white;
+
+  border-bottom:
+  1px solid #e5e7eb;
+}
+
+header h1{
+
+  font-size:20px;
+
+  font-weight:800;
+
+  color:#0f172a;
+}
+
+/* NAV */
+
+nav{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+}
+
+nav a{
+
+  text-decoration:none;
+
+  color:#334155;
+
+  font-weight:600;
+
+  padding:
+  10px
+  16px;
+
+  border-radius:12px;
+
+  transition:.25s ease;
+}
+
+nav a:hover{
+
+  background:#e2e8f0;
+}
+
+/* HERO */
+
+.hero{
+
+  background:
+  linear-gradient(
+    90deg,
+    #0f766e,
+    #2563eb
+  );
+
+  color:white;
+
+  padding:
+  80px
+  24px;
+}
+
+.hero-inner{
+
+  max-width:1060px;
+
+  margin:auto;
+}
+
+.hero-label{
+
+  font-size:14px;
+
+  font-weight:700;
+
+  margin-bottom:20px;
+
+  opacity:.9;
+}
+
+.hero h2{
+
+  font-size:
+  clamp(
+    2.4rem,
+    6vw,
+    5rem
+  );
+
+  line-height:1.05;
+
+  margin-bottom:20px;
+
+  font-weight:800;
+
+  max-width:850px;
+}
+
+.hero p{
+
+  font-size:18px;
+
+  opacity:.92;
+
+  line-height:1.7;
+}
+
+/* PRODUCTS */
+
+.products{
+
+  max-width:1100px;
+
+  margin:
+  40px auto
+  120px;
+
+  padding:
+  0 20px;
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(
+    auto-fit,
+    minmax(240px,1fr)
+  );
+
+  gap:22px;
+}
+
+/* CARD */
+
+.product-card{
+
+  background:white;
+
+  border-radius:22px;
+
+  overflow:hidden;
+
+  border:
+  1px solid #e5e7eb;
+
+  transition:.3s ease;
+
+  box-shadow:
+  0 4px 20px rgba(0,0,0,.04);
+}
+
+.product-card:hover{
+
+  transform:
+  translateY(-6px);
+
+  box-shadow:
+  0 10px 28px rgba(0,0,0,.08);
+}
+
+/* IMAGE */
+
+.product-image{
+
+  background:#f8fafc;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:28px;
+
+  min-height:170px;
+}
+
+.product-image img{
+
+  width:110px;
+
+  height:110px;
+
+  object-fit:contain;
+}
+
+/* CONTENT */
+
+.product-content{
+
+  padding:18px;
+}
+
+.product-content h3{
+
+  font-size:1.5rem;
+
+  margin-bottom:10px;
+
+  color:#0f172a;
+}
+
+.price{
+
+  color:#ff6b00;
+
+  font-size:1.3rem;
+
+  font-weight:800;
+
+  margin-bottom:16px;
+}
+
+/* SELECT */
+
+.product-content select{
+
+  width:100%;
+
+  padding:12px;
+
+  border-radius:12px;
+
+  border:
+  1px solid #dbe2ea;
+
+  margin-bottom:16px;
+
+  font-size:15px;
+}
+
+/* QTY */
+
+.qty{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-bottom:16px;
 }
 
 .qty button{
-  background:#f97316;
-  color:white;
-  border:none;
-  padding:5px 10px;
-  border-radius:6px;
-}
 
-.add{
-  width:100%;
-  margin-top:10px;
-  padding:10px;
-  background:#22c55e;
-  border:none;
-  color:white;
-  border-radius:10px;
-}
+  width:42px;
+  height:42px;
 
-.cart{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  border-top:1px solid #ddd;
-  padding:10px;
-}
-body {
-  padding-bottom: 100px;
-}
-.cart {
-  box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-}
-.cart {
-  max-width: 600px;
-  margin: auto;
-  left: 0;
-  right: 0;
-}
-.cart {
-  border-top: 1px solid #ddd;
-}
-.checkout-btn{
-  width:100%;
-  margin-top:10px;
-  padding:16px;
-  font-size:16px;
-  font-weight:bold;
   border:none;
+
   border-radius:12px;
-  background:#2563eb;
-  color:white;
+
+  background:#e7f2ef;
+
+  color:#0f766e;
+
+  font-size:20px;
+
+  font-weight:700;
+
   cursor:pointer;
-  transition:0.2s;
 }
 
-.checkout-btn:hover{
-  background:#1d4ed8;
+.qty span{
+
+  font-weight:700;
+
+  font-size:18px;
 }
 
-.checkout-btn:active{
-  transform:scale(0.97);
+/* BUTTON */
+
+.add-btn{
+
+  width:100%;
+
+  padding:14px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:#0f766e;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.25s ease;
 }
-.cart{
+
+.add-btn:hover{
+
+  background:#115e59;
+}
+
+/* CHECKOUT BAR */
+
+.checkout-bar{
+
   position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
+
+  left:50%;
+
+  bottom:18px;
+
+  transform:translateX(-50%);
+
+  width:min(92%,650px);
+
   background:white;
-  padding:12px;
-  box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+
+  border-radius:20px;
+
+  padding:18px 20px;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,.15);
+
+  z-index:999;
+}
+
+.checkout-total{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:4px;
+}
+
+.checkout-total strong{
+
+  font-size:20px;
+}
+
+.checkout-total span{
+
+  color:#64748b;
+}
+
+.checkout-btn{
+
+  padding:
+  14px
+  26px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:#0f766e;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:700;
+
+  cursor:pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  header{
+
+    padding:16px 18px;
+  }
+
+  .hero{
+
+    padding:
+    60px
+    18px;
+  }
+
+  .hero h2{
+
+    font-size:2.8rem;
+  }
+
+  .hero p{
+
+    font-size:15px;
+  }
+
+  .products{
+
+    grid-template-columns:1fr;
+
+    padding:
+    0 18px;
+
+    margin-top:24px;
+  }
+
+  .checkout-bar{
+
+    width:94%;
+
+    padding:16px;
+  }
+
+  .checkout-btn{
+
+    padding:
+    12px
+    18px;
+
+    font-size:14px;
+  }
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="grid" id="grid"></div>
+<!-- HEADER -->
+<header>
+  <h1>ALUNA STORE</h1>
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="../food/index.html">Food</a>
+  </nav>
+</header>
 
-<div class="cart">
-  <div id="total">Total: Rp 0</div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">PREMIUM APPS</div>
+    <h2>Premium Apps & Digital Services</h2>
+    <p>Get access to premium streaming, productivity tools, and digital services at affordable prices. Choose from our curated selection of top-tier apps.</p>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products"></section>
+
+<!-- CHECKOUT BAR -->
+<div class="checkout-bar">
+  <div class="checkout-total">
+    <strong id="total">Total: Rp 0</strong>
+    <span id="item-count">0 items</span>
+  </div>
   <button class="checkout-btn" onclick="checkout()">Checkout</button>
 </div>
 
 <script>
 const rupiah=n=>"Rp "+n.toLocaleString("id-ID");
+
+let cart = [];
+const qtyState = {};
+const productsContainer = document.getElementById("products");
 
 /* DATA FULL */
 const data=[
@@ -198,20 +566,18 @@ options:[{label:"1 Bulan 15K",price:15000},{label:"1 Tahun 25K",price:25000}]},
 options:[{label:"1 Bulan 15K",price:15000}]}
 ];
 
-let cart=[];
-const qtyState={};
-const grid=document.getElementById("grid");
-
 /* RENDER */
 function render(){
-  grid.innerHTML="";
+  productsContainer.innerHTML = "";
   data.forEach((p,i)=>{
-    let html=`
-    <div class="card">
-      <img src="${p.img}">
-      <div class="content">
-        <div class="title">${p.name}</div>
-        <div class="price">${p.options[0].label}</div>
+    let html = `
+    <div class="product-card">
+      <div class="product-image">
+        <img src="${p.img}" alt="${p.name}">
+      </div>
+      <div class="product-content">
+        <h3>${p.name}</h3>
+        <div class="price">${rupiah(p.options[0].price)}</div>
 
         <select id="opt-${i}">
           ${p.options.map(o=>`<option value="${o.price}">${o.label}</option>`).join("")}
@@ -223,31 +589,31 @@ function render(){
           <button onclick="changeQty(${i},1)">+</button>
         </div>
 
-        <button class="add" onclick="add(${i})">Tambah</button>
+        <button class="add-btn" onclick="add(${i})">Tambah ke Keranjang</button>
       </div>
     </div>`;
-    grid.innerHTML+=html;
+    productsContainer.innerHTML += html;
   });
 }
 
 /* QTY */
 function changeQty(i,val){
-  qtyState[i]=(qtyState[i]||1)+val;
-  if(qtyState[i]<1) qtyState[i]=1;
-  document.getElementById(`qty-${i}`).innerText=qtyState[i];
+  qtyState[i] = (qtyState[i] || 1) + val;
+  if(qtyState[i] < 1) qtyState[i] = 1;
+  document.getElementById(`qty-${i}`).innerText = qtyState[i];
 }
 
 /* ADD */
 function add(i){
-  const select=document.getElementById(`opt-${i}`);
-  const qty=qtyState[i]||1;
+  const select = document.getElementById(`opt-${i}`);
+  const qty = qtyState[i] || 1;
 
-  const found=cart.find(x=>x.name===data[i].name && x.label===select.options[select.selectedIndex].text);
-  if(found) found.qty+=qty;
+  const found = cart.find(x => x.name === data[i].name && x.label === select.options[select.selectedIndex].text);
+  if(found) found.qty += qty;
   else cart.push({
-    name:data[i].name,
-    label:select.options[select.selectedIndex].text,
-    price:parseInt(select.value),
+    name: data[i].name,
+    label: select.options[select.selectedIndex].text,
+    price: parseInt(select.value),
     qty
   });
 
@@ -256,14 +622,19 @@ function add(i){
 
 /* CART */
 function update(){
-  let total=0;
-  cart.forEach(i=>total+=i.price*i.qty);
-  document.getElementById("total").innerText="Total: "+rupiah(total);
+  let total = 0;
+  let itemCount = 0;
+  cart.forEach(i => {
+    total += i.price * i.qty;
+    itemCount += i.qty;
+  });
+  document.getElementById("total").innerText = "Total: " + rupiah(total);
+  document.getElementById("item-count").innerText = itemCount + " items";
 }
 
 /* CHECKOUT */
 function checkout(){
-  if(cart.length===0) return alert("Keranjang kosong!");
+  if(cart.length === 0) return alert("Keranjang kosong!");
 
   // simpan cart
   localStorage.setItem("cart", JSON.stringify(cart));
