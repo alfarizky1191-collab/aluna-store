@@ -1,454 +1,234 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>ALUNA STORE</title>
-
-  <!-- SEO -->
-  <meta name="description"
-  content="ALUNA STORE - Premium Apps, Food, Diecast dan kebutuhan digital lainnya.">
-
-  <meta name="keywords"
-  content="aluna store,premium apps,food,diecast,digital store">
-
-  <meta name="theme-color"
-  content="#38bdf8">
-
-  <!-- OPEN GRAPH -->
-  <meta property="og:title"
-  content="ALUNA STORE">
-
-  <meta property="og:description"
-  content="Premium Apps, Food, Diecast dan kebutuhan digital lainnya.">
-
-  <meta property="og:type"
-  content="website">
-
-  <meta property="og:url"
-  content="https://alunastore.my.id/">
-
-  <!-- SECURITY -->
-  <meta http-equiv="Content-Security-Policy"
-  content="
-  default-src 'self';
-  script-src 'self' 'unsafe-inline'
-  https://www.googletagmanager.com
-  https://www.google-analytics.com;
-
-  connect-src 'self'
-  https://www.google-analytics.com;
-
-  style-src 'self' 'unsafe-inline';
-
-  img-src 'self' data: https:;
-  font-src 'self' data:;
-  object-src 'none';
-  base-uri 'self';
-  ">
-
-  <!-- GOOGLE ANALYTICS -->
-  <script async
-  src="https://www.googletagmanager.com/gtag/js?id=G-J83J8QQFDW">
-  </script>
-
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag(){
-      dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-
-    gtag('config', 'G-J83J8QQFDW');
-  </script>
-
-  <style>
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:'Segoe UI',sans-serif;
-    }
-
-    html{
-      scroll-behavior:smooth;
-    }
-
-    body{
-      background:
-      linear-gradient(
-        rgba(0,0,0,0.55),
-        rgba(0,0,0,0.55)
-      ),
-      url('./assets/images/abg.png')
-      no-repeat center center/cover;
-
-      color:white;
-      min-height:100vh;
-      animation:zoomBg 20s infinite alternate;
-    }
-
-    @keyframes zoomBg{
-      from{
-        background-size:100%;
-      }
-
-      to{
-        background-size:110%;
-      }
-    }
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:100;
-
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-
-      padding:18px 24px;
-
-      backdrop-filter:blur(12px);
-
-      background:rgba(0,0,0,0.25);
-    }
-
-    header h1{
-      color:#38bdf8;
-      font-size:20px;
-      letter-spacing:1px;
-    }
-
-    nav{
-      display:flex;
-      gap:16px;
-    }
-
-    nav a{
-      text-decoration:none;
-      color:white;
-      opacity:0.75;
-      transition:0.3s;
-      font-size:14px;
-    }
-
-    nav a:hover{
-      opacity:1;
-      color:#38bdf8;
-    }
-
-    .hero{
-      min-height:85vh;
-
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-
-      text-align:center;
-      padding:24px;
-    }
-
-    .hero h2{
-      font-size:clamp(2.5rem,6vw,4.5rem);
-      margin-bottom:16px;
-    }
-
-    .hero p{
-      max-width:650px;
-      opacity:0.85;
-      line-height:1.6;
-      margin-bottom:28px;
-      font-size:1rem;
-    }
-
-    .hero-buttons{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-
-    .btn{
-      padding:14px 28px;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:bold;
-      transition:0.3s;
-    }
-
-    .btn-primary{
-      background:#38bdf8;
-      color:black;
-    }
-
-    .btn-primary:hover{
-      transform:translateY(-3px);
-    }
-
-    .btn-secondary{
-      border:1px solid rgba(255,255,255,0.3);
-      color:white;
-      background:rgba(255,255,255,0.08);
-    }
-
-    .btn-secondary:hover{
-      background:rgba(255,255,255,0.15);
-    }
-
-    .features{
-      display:grid;
-      grid-template-columns:
-      repeat(auto-fit,minmax(240px,1fr));
-
-      gap:24px;
-
-      padding:40px 24px 80px;
-
-      max-width:1200px;
-      margin:auto;
-    }
-
-    .card{
-      background:rgba(0,0,0,0.45);
-
-      border:1px solid rgba(255,255,255,0.08);
-
-      border-radius:20px;
-
-      padding:28px;
-
-      text-decoration:none;
-      color:white;
-
-      transition:0.4s ease;
-
-      opacity:0;
-      transform:translateY(40px);
-    }
-
-    .card.show{
-      opacity:1;
-      transform:translateY(0);
-    }
-
-    .card:hover{
-      transform:translateY(-8px);
-      background:rgba(0,0,0,0.65);
-    }
-
-    .icon{
-      width:30px;
-      height:30px;
-
-      fill:#38bdf8;
-
-      margin-bottom:14px;
-    }
-
-    .card h3{
-      margin-bottom:10px;
-    }
-
-    .card p{
-      opacity:0.8;
-      line-height:1.5;
-      font-size:14px;
-    }
-
-    footer{
-      text-align:center;
-      padding:28px;
-      opacity:0.6;
-      font-size:14px;
-    }
-
-    @media(max-width:768px){
-
-      header{
-        flex-direction:column;
-        gap:12px;
-      }
-
-      nav{
-        flex-wrap:wrap;
-        justify-content:center;
-      }
-
-      .hero h2{
-        font-size:2.6rem;
-      }
-
-    }
-
-  </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aluna Store - Premium Apps, Food, Diecast dan kebutuhan digital lainnya.">
+<meta name="keywords" content="aluna store,premium apps,food,diecast,digital store">
+<meta name="theme-color" content="#38bdf8">
+<title>ALUNA STORE</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J83J8QQFDW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-J83J8QQFDW');
+</script>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  background:url('abg.png') no-repeat center/cover;
+  color:white;
+  min-height:100vh;
+  animation:zoomBg 20s infinite alternate;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  z-index:-1;
+}
+
+@keyframes zoomBg{
+  from{background-size:100%}
+  to{background-size:110%}
+}
+
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+  backdrop-filter:blur(10px);
+}
+
+header h1{
+  color:#38bdf8;
+  font-size:20px;
+}
+
+/* NAV */
+nav a{
+  margin-left:15px;
+  text-decoration:none;
+  color:white;
+  opacity:0.7;
+  font-size:14px;
+}
+
+nav a:hover{
+  opacity:1;
+}
+
+/* HERO */
+.hero{
+  height:80vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
+
+.hero h2{
+  font-size:2.5rem;
+}
+
+.hero p{
+  opacity:0.8;
+  margin:10px 0 20px;
+}
+
+.btn{
+  padding:12px 25px;
+  background:#38bdf8;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* FEATURES */
+.features{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:15px;
+  padding:20px;
+}
+
+/* CARD */
+.card{
+  background:rgba(0,0,0,0.5);
+  padding:20px;
+  border-radius:15px;
+  text-decoration:none;
+  color:white;
+
+  opacity:0;
+  transform:scale(0.7) rotate(-8deg);
+  transition:0.5s ease;
+}
+
+.card.show{
+  opacity:1;
+  transform:scale(1) rotate(0);
+}
+
+.card:hover{
+  transform:scale(1.05);
+  background:rgba(0,0,0,0.7);
+}
+
+/* ICON */
+.icon{
+  width:28px;
+  height:28px;
+  margin-bottom:8px;
+  fill:#38bdf8;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  opacity:.6;
+  padding:20px;
+}
+
+@media(max-width:600px){
+  .hero h2{font-size:2rem;}
+}
+</style>
 </head>
 
 <body>
 
-  <header>
+<header>
+  <h1>ALUNA STORE</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="food/index.html">Food</a>
+    <a href="#">Diecast</a>
+    <a href="apps/index.html">Apps</a>
+  </nav>
+</header>
 
-    <h1>ALUNA STORE</h1>
+<section class="hero">
+  <h2>Aluna Store</h2>
+  <p>Find your needs in one click.</p>
+  <button class="btn">Get Started</button>
+</section>
 
-    <nav>
-      <a href="./index.html">Home</a>
+<section class="features">
 
-      <a href="./pages/apps/index.html">
-        Apps
-      </a>
+<!-- DIECAST -->
+<a href="#" class="card">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M3 13l1-3 2-2h12l2 2 1 3v5h-2v-2H5v2H3zM6 10l-1 2h14l-1-2H6z"/>
+  </svg>
+  <h3>Diecast</h3>
+  <p>Koleksi mobil mini premium & unik.</p>
+</a>
 
-      <a href="./pages/food/index.html">
-        Food
-      </a>
+<!-- APPS -->
+<a href="apps/index.html" class="card">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm6 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+  </svg>
+  <h3>Premium Apps</h3>
+  <p>Akses aplikasi premium dengan harga terjangkau.</p>
+</a>
 
-      <a href="#">
-        Diecast
-      </a>
-    </nav>
+<!-- FOOD -->
+<a href="food/index.html" class="card">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M4 3h2v18H4zm4 0h2v10a2 2 0 11-2 0zm6 0h2v10a2 2 0 11-2 0zm4 0h2v18h-2z"/>
+  </svg>
+  <h3>Food</h3>
+  <p>Makanan enak & kekinian buat nemenin santai.</p>
+</a>
 
-  </header>
+</section>
 
-  <section class="hero">
+<footer>
+  © 2026 ALUNA STORE
+</footer>
 
-    <h2>
-      Find Your Needs In One Click
-    </h2>
 
-    <p>
-      Premium apps, makanan favorit,
-      diecast, dan kebutuhan digital lainnya
-      dalam satu tempat yang modern,
-      cepat, dan nyaman digunakan.
-    </p>
+<script>
+/* ANIMASI CARD AUTO SAAT TERLIHAT */
+const cards = document.querySelectorAll('.card');
 
-    <div class="hero-buttons">
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
 
-      <a
-      class="btn btn-primary"
-      href="./pages/apps/index.html">
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+    }
 
-        Lihat Apps
+  });
+},{
+  threshold:0.2
+});
 
-      </a>
-
-      <a
-      class="btn btn-secondary"
-      href="./pages/food/index.html">
-
-        Pesan Food
-
-      </a>
-
-    </div>
-
-  </section>
-
-  <section class="features">
-
-    <!-- APPS -->
-    <a
-    href="./pages/apps/index.html"
-    class="card">
-
-      <svg class="icon"
-      viewBox="0 0 24 24">
-
-        <path d="M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm6 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
-
-      </svg>
-
-      <h3>Premium Apps</h3>
-
-      <p>
-        Netflix, Spotify, Canva,
-        ChatGPT dan layanan premium lainnya.
-      </p>
-
-    </a>
-
-    <!-- FOOD -->
-    <a
-    href="./pages/food/index.html"
-    class="card">
-
-      <svg class="icon"
-      viewBox="0 0 24 24">
-
-        <path d="M4 3h2v18H4zm4 0h2v10a2 2 0 11-2 0zm6 0h2v10a2 2 0 11-2 0zm4 0h2v18h-2z"/>
-
-      </svg>
-
-      <h3>Food</h3>
-
-      <p>
-        Makanan enak, minuman segar,
-        dan camilan favorit siap dipesan.
-      </p>
-
-    </a>
-
-    <!-- DIECAST -->
-    <a
-    href="#"
-    class="card">
-
-      <svg class="icon"
-      viewBox="0 0 24 24">
-
-        <path d="M3 13l1-3 2-2h12l2 2 1 3v5h-2v-2H5v2H3zM6 10l-1 2h14l-1-2H6z"/>
-
-      </svg>
-
-      <h3>Diecast</h3>
-
-      <p>
-        Koleksi mobil mini premium
-        dan item collectible pilihan.
-      </p>
-
-    </a>
-
-  </section>
-
-  <footer>
-    © 2026 ALUNA STORE
-  </footer>
-
-  <script>
-
-    const cards =
-      document.querySelectorAll('.card');
-
-    const observer =
-      new IntersectionObserver((entries)=>{
-
-        entries.forEach((entry)=>{
-
-          if(entry.isIntersecting){
-
-            entry.target.classList.add('show');
-
-          }
-
-        });
-
-      },{
-        threshold:0.15
-      });
-
-    cards.forEach((card)=>{
-
-      observer.observe(card);
-
-    });
-
-  </script>
+cards.forEach(card=>{
+  observer.observe(card);
+})
+</script>
+  
+</script>
 
 </body>
 </html>
