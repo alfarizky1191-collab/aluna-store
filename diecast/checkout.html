@@ -40,11 +40,9 @@
 
 <script>
   const CART_KEY = 'diecast-cart';
-  const STOCK_KEY = 'diecast-stock';
   const WHATSAPP_NUMBER = '6289656009717';
 
   let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-  let stockData = JSON.parse(localStorage.getItem(STOCK_KEY)) || {};
 
   function formatPrice(value){
     return 'Rp ' + value.toLocaleString('id-ID');
@@ -76,27 +74,6 @@
 
   function syncCart(){
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  }
-
-  function getCurrentStock(item){
-    if(Number.isInteger(stockData[item.id])){
-      return stockData[item.id];
-    }
-
-    if(Number.isInteger(item.stock)){
-      return item.stock;
-    }
-
-    return item.quantity;
-  }
-
-  function applyStockAfterOrder(items){
-    items.forEach(item => {
-      stockData[item.id] =
-        Math.max(getCurrentStock(item) - item.quantity, 0);
-    });
-
-    localStorage.setItem(STOCK_KEY, JSON.stringify(stockData));
   }
 
   function removeOneItem(id){
@@ -173,10 +150,6 @@
               <span>${item.quantity} x ${formatPrice(item.price)}</span>
               <span class="font-semibold text-white">${formatPrice(item.price * item.quantity)}</span>
             </div>
-
-            <p class="mt-2 text-xs text-zinc-500">
-              Stok tersedia: ${getCurrentStock(item)}
-            </p>
           </div>
         </div>
       `;
@@ -198,17 +171,6 @@
     const orderItems =
       getOrderItems();
 
-    const unavailableItem =
-      orderItems.find(item => item.quantity > getCurrentStock(item));
-
-    if(unavailableItem){
-      alert(
-        'Stok ' + unavailableItem.title + ' tersisa ' + getCurrentStock(unavailableItem)
-      );
-
-      return;
-    }
-
     const order = {
       customerName,
       customerPhone,
@@ -219,7 +181,6 @@
     };
 
     localStorage.setItem('diecast-last-order', JSON.stringify(order));
-    applyStockAfterOrder(order.items);
     window.open(
       'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(buildOrderMessage(order)),
       '_blank'
