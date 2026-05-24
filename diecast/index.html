@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Diecast Garage</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:#050505;
+  color:white;
+  overflow-x:hidden;
+}
+
+.glass{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.card-hover{
+  transition:0.3s;
+}
+
+.card-hover:hover{
+  transform:translateY(-8px);
+}
+
+.gradient-text{
+  background:linear-gradient(to right,#fff,#38bdf8);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hide-scroll::-webkit-scrollbar{
+  display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<!-- ========================= -->
+<!-- SCRIPT -->
+<!-- ========================= -->
+
+<script>
+
+const products = [
+
+  {
+    id:1,
+    title:'Porsche 911',
+    badge:'HOT WHEELS',
+    brand:'hotwheels',
+    price:279000,
+    stock:3,
+    image:''
+  },
+
+  {
+    id:2,
+    title:'Nissan GT-R R34',
+    badge:'MINI GT',
+    brand:'minigt',
+    price:249000,
+    stock:2,
+    image:''
+  },
+
+  {
+    id:3,
+    title:'Toyota Supra MK4',
+    badge:'INNO64',
+    brand:'inno64',
+    price:329000,
+    stock:0,
+    image:''
+  },
+
+  {
+    id:4,
+    title:'Mazda RX7',
+    badge:'TOMICA',
+    brand:'tomica',
+    price:199000,
+    stock:4,
+    image:''
+  },
+
+  {
+    id:5,
+    title:'Datsun 510',
+    badge:'KAIDO HOUSE',
+    brand:'kaidohouse',
+    price:399000,
+    stock:1,
+    image:''
+  },
+
+  {
+    id:6,
+    title:'Liberty Walk GTR',
+    badge:'TARMAC WORKS',
+    brand:'tarmacworks',
+    price:359000,
+    stock:2,
+    image:''
+  }
+
+];
+
+
+const CART_KEY =
+  'diecast-cart';
+
+const STOCK_KEY =
+  'diecast-stock';
+
+
+let cart =
+  JSON.parse(localStorage.getItem(CART_KEY)) || [];
+
+let activeFilter =
+  'all';
+
+let stockData =
+  loadStockData();
+
+
+function loadStockData(){
+
+  const savedStock =
+    JSON.parse(localStorage.getItem(STOCK_KEY)) || {};
+
+  const data = {};
+
+  products.forEach(product => {
+
+    data[product.id] =
+      Number.isInteger(savedStock[product.id])
+      ? savedStock[product.id]
+      : product.stock;
+
+  });
+
+  localStorage.setItem(
+    STOCK_KEY,
+    JSON.stringify(data)
+  );
+
+  return data;
+
+}
+
+
+function saveCart(){
+
+  localStorage.setItem(
+    CART_KEY,
+    JSON.stringify(cart)
+  );
+
+}
+
+
+function getCartQuantity(productId){
+
+  return cart.filter(item => item.id === productId).length;
+
+}
+
+
+function getProductStock(product){
+
+  return (
+    Number.isInteger(stockData[product.id])
+    ? stockData[product.id]
+    : product.stock
+  );
+
+}
+
+
+function getAvailableStock(product){
+
+  const stock =
+    getProductStock(product);
+
+  return Math.max(
+    stock - getCartQuantity(product.id),
+    0
+  );
+
+}
+
+
+
+/* ========================= */
+/* RENDER PRODUCT */
+/* ========================= */
+
+function renderProducts(filter='all'){
+
+  activeFilter = filter;
+
+  const container =
+    document.getElementById('product-list');
+
+  container.innerHTML = '';
+
+  const filteredProducts =
+    filter === 'all'
+    ? products
+    : products.filter(p => p.brand === filter);
+
+
+  filteredProducts.forEach(product => {
+
+    const availableStock =
+      getAvailableStock(product);
+
+    const isOutOfStock =
+      availableStock === 0;
+
+    container.innerHTML += `
+
+      <div class="glass rounded-[30px] overflow-hidden ${isOutOfStock ? 'opacity-70' : 'card-hover'}">
+
+        ${
+          product.image
+          ?
+          `<img src="${product.image}" class="h-64 w-full object-cover">`
+          :
+          `
+          <div class="h-64 w-full bg-black/20 border-b border-white/5 flex items-center justify-center text-zinc-500 text-sm">
+            Upload Image Here
+          </div>
+          `
+        }
+
+        <div class="p-6">
+
+          <div class="flex items-center justify-between mb-4">
+
+            <span class="bg-sky-500/20 text-sky-300 text-xs px-3 py-1 rounded-full">
+
+            ${product.badge}
+
+            </span>
+
+            <span class="${isOutOfStock ? 'bg-red-500/20 text-red-300' : 'bg-emerald-500/20 text-emerald-300'} text-xs px-3 py-1 rounded-full">
+
+              ${isOutOfStock ? 'Stok Habis' : 'Stok ' + availableStock}
+
+            </span>
+
+          </div>
+
+          <h3 class="text-2xl font-bold mb-2">
+
+            ${product.title}
+
+          </h3>
+
+          <p class="text-zinc-400 text-sm leading-relaxed mb-5">
+
+            Premium diecast collection.
+
+          </p>
+
+          <div class="flex items-center justify-between">
+
+            <h4 class="text-2xl font-bold">
+
+              Rp ${product.price.toLocaleString('id-ID')}
+
+            </h4>
+
+            <button
+              onclick="addToCart(${product.id})"
+              ${isOutOfStock ? 'disabled' : ''}
+              class="${isOutOfStock ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed' : 'bg-white text-black hover:bg-sky-100'} px-5 py-3 rounded-xl font-semibold transition">
+
+              ${isOutOfStock ? 'Stok Habis' : 'Add Cart'}
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+
+/* ========================= */
+/* FILTER BRAND */
+/* ========================= */
+
+function filterBrand(brand){
+
+  renderProducts(brand);
+
+  document.getElementById('collection')
+    .scrollIntoView({
+      behavior:'smooth'
+    });
+
+}
+
+
+
+/* ========================= */
+/* ADD CART */
+/* ========================= */
+
+function addToCart(id){
+
+  const product =
+    products.find(p => p.id === id);
+
+  const availableStock =
+    getAvailableStock(product);
+
+  if(availableStock <= 0){
+
+    alert('Stok ' + product.title + ' habis');
+
+    return;
+
+  }
+
+  cart.push(product);
+
+  saveCart();
+
+  renderCart();
+
+  renderProducts(activeFilter);
+
+  alert(product.title + ' ditambahkan');
+
+}
+
+
+
+/* ========================= */
+/* REMOVE CART */
+/* ========================= */
+
+function removeCart(index){
+
+  cart.splice(index,1);
+
+  saveCart();
+
+  renderCart();
+
+  renderProducts(activeFilter);
+
+}
+
+
+
+/* ========================= */
+/* RENDER CART */
+/* ========================= */
+
+function renderCart(){
+
+  const cartItems =
+    document.getElementById('cart-items');
+
+  const totalText =
+    document.getElementById('total-price');
+
+  cartItems.innerHTML = '';
+
+  let total = 0;
+
+
+  if(cart.length === 0){
+
+    cartItems.innerHTML = `
+
+      <span class="text-zinc-500">
+
+        Keranjang kosong
+
+      </span>
+
+    `;
+
+    totalText.innerHTML = 'Rp 0';
+
+    return;
+
+  }
+
+
+  cart.forEach(item=>{
+
+    total += item.price;
+
+  });
+
+  const lastItem =
+    cart[cart.length - 1];
+
+  cartItems.innerHTML = `
+
+    <div class="flex min-w-0 items-center gap-3">
+
+      <span class="truncate">
+
+        ${cart.length} item - terakhir: ${lastItem.title}
+
+      </span>
+
+      <button
+        onclick="removeCart(${cart.length - 1})"
+        class="shrink-0 text-xs font-semibold text-red-400 hover:text-red-300">
+
+        Hapus
+
+      </button>
+
+    </div>
+
+  `;
+
+
+  totalText.innerHTML =
+    'Rp ' + total.toLocaleString('id-ID');
+
+}
+
+
+
+/* ========================= */
+/* CHECKOUT */
+/* ========================= */
+
+function checkout(){
+
+  if(cart.length === 0){
+
+    alert('Keranjang kosong');
+
+    return;
+
+  }
+
+  const soldOutItem =
+    cart.find(item => getCartQuantity(item.id) > getProductStock(item));
+
+  if(soldOutItem){
+
+    alert('Stok ' + soldOutItem.title + ' tidak cukup');
+
+    renderProducts(activeFilter);
+
+    return;
+
+  }
+
+  saveCart();
+
+  window.location.href = 'checkout.html';
+
+}
+
+
+
+/* ========================= */
+/* INIT */
+/* ========================= */
+
+window.onload = () => {
+
+  renderProducts();
+
+  renderCart();
+
+}
+
+</script>
+
+
+
+<!-- ========================= -->
+<!-- NAVBAR -->
+<!-- ========================= -->
+
+<nav class="fixed top-0 left-0 w-full z-50 px-4 py-4">
+
+  <div class="max-w-7xl mx-auto glass rounded-2xl px-5 py-4 flex items-center justify-between">
+
+    <h1 class="text-xl font-bold">
+
+      DIECAST<span class="text-sky-400">GARAGE</span>
+
+    </h1>
+
+    <a
+      href="#collection"
+      class="bg-sky-500 hover:bg-sky-400 transition px-5 py-2 rounded-xl font-semibold text-black">
+
+      Explore
+
+    </a>
+
+  </div>
+
+</nav>
+
+
+
+<!-- ========================= -->
+<!-- HERO -->
+<!-- ========================= -->
+
+<section class="min-h-screen flex items-center px-4 pt-28 pb-16">
+
+  <div class="max-w-7xl mx-auto">
+
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+
+      <div>
+
+        <div class="glass inline-flex px-4 py-2 rounded-full text-xs mb-6 text-zinc-300">
+
+          Premium Diecast Collection
+
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-black leading-tight mb-6">
+
+          Collect Your
+
+          <span class="gradient-text block">
+
+            Dream Cars
+
+          </span>
+
+        </h1>
+
+        <p class="text-zinc-400 leading-relaxed text-lg mb-8 max-w-xl">
+
+          Ecommerce modern untuk kolektor diecast premium.
+
+        </p>
+
+        <a
+          href="#collection"
+          class="bg-sky-500 hover:bg-sky-400 transition px-7 py-4 rounded-2xl font-semibold text-black inline-block">
+
+          Start Shopping
+
+        </a>
+
+      </div>
+
+
+      <div class="glass rounded-[40px] p-8">
+
+        <div class="grid grid-cols-2 gap-4">
+
+          <div class="bg-white/5 rounded-3xl p-5">
+            <h3 class="text-3xl font-black">1:64</h3>
+            <p class="text-zinc-400 text-sm mt-2">
+              Scale
+            </p>
+          </div>
+
+          <div class="bg-white/5 rounded-3xl p-5">
+            <h3 class="text-3xl font-black">JDM</h3>
+            <p class="text-zinc-400 text-sm mt-2">
+              Japanese
+            </p>
+          </div>
+
+          <div class="bg-white/5 rounded-3xl p-5">
+            <h3 class="text-3xl font-black">LIMITED</h3>
+            <p class="text-zinc-400 text-sm mt-2">
+              Edition
+            </p>
+          </div>
+
+          <div class="bg-white/5 rounded-3xl p-5">
+            <h3 class="text-3xl font-black">PREMIUM</h3>
+            <p class="text-zinc-400 text-sm mt-2">
+              Quality
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- BRAND -->
+<!-- ========================= -->
+
+<section class="px-4 pb-20">
+
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex gap-5 overflow-x-auto hide-scroll pb-2">
+
+      <button onclick="renderProducts('all')" class="glass rounded-3xl px-6 py-5 min-w-[160px] text-left card-hover">
+        🔥 All Brand
+      </button>
+
+      <button onclick="filterBrand('hotwheels')" class="glass rounded-3xl px-6 py-5 min-w-[160px] text-left card-hover">
+        🔥 Hot Wheels
+      </button>
+
+      <button onclick="filterBrand('minigt')" class="glass rounded-3xl px-6 py-5 min-w-[160px] text-left card-hover">
+        🏎️ Mini GT
+      </button>
+
+      <button onclick="filterBrand('tomica')" class="glass rounded-3xl px-6 py-5 min-w-[160px] text-left card-hover">
+        🚗 Tomica
+      </button>
+
+      <button onclick="filterBrand('inno64')" class="glass rounded-3xl px-6 py-5 min-w-[160px] text-left card-hover">
+        ⚡ Inno64
+      </button>
+
+      <button onclick="filterBrand('kaidohouse')" class="glass rounded-3xl px-6 py-5 min-w-[160px] text-left card-hover">
+        💎 Kaido House
+      </button>
+
+      <button onclick="filterBrand('tarmacworks')" class="glass rounded-3xl px-6 py-5 min-w-[160px] text-left card-hover">
+        🏁 Tarmac Works
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- PRODUCT -->
+<!-- ========================= -->
+
+<section id="collection" class="px-4 pb-32">
+
+  <div class="max-w-7xl mx-auto">
+
+    <div class="mb-10">
+
+      <h2 class="text-4xl md:text-5xl font-black mb-4">
+
+        Featured Collection
+
+      </h2>
+
+      <p class="text-zinc-400">
+
+        Pilih koleksi diecast favorit kamu.
+
+      </p>
+
+    </div>
+
+
+    <div
+      id="product-list"
+      class="grid md:grid-cols-3 gap-6">
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- CART -->
+<!-- ========================= -->
+
+<section class="fixed bottom-4 left-0 w-full px-4 z-50 pointer-events-none">
+
+  <div class="max-w-4xl mx-auto glass rounded-2xl px-4 py-3 pointer-events-auto">
+
+    <div class="flex items-center gap-3 md:gap-5">
+
+      <div class="min-w-0 flex-1">
+
+        <h2 class="text-base md:text-lg font-black leading-tight">
+
+          Shopping Cart
+
+        </h2>
+
+        <div
+          id="cart-items"
+          class="truncate text-xs md:text-sm text-zinc-400">
+
+          Keranjang kosong
+
+        </div>
+
+      </div>
+
+      <div class="shrink-0 text-right">
+
+        <p class="text-[10px] md:text-xs uppercase text-zinc-500">
+          Total
+        </p>
+
+        <h3
+          id="total-price"
+          class="text-lg md:text-2xl font-black text-sky-400 leading-tight">
+
+          Rp 0
+
+        </h3>
+
+      </div>
+
+      <button
+        onclick="checkout()"
+        class="shrink-0 bg-sky-500 hover:bg-sky-400 transition text-black px-4 md:px-5 py-3 rounded-xl text-sm md:text-base font-bold">
+
+        Checkout
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+</body>
+</html>

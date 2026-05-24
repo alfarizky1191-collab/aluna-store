@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout - Diecast Garage</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      background:#050505;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    .glass{
+      background:rgba(255,255,255,0.05);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .gradient-text{
+      background:linear-gradient(to right,#fff,#38bdf8);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+  </style>
+</head>
+
+<body>
+
+<script>
+  const CART_KEY = 'diecast-cart';
+  const STOCK_KEY = 'diecast-stock';
+  const WHATSAPP_NUMBER = '6289656009717';
+
+  let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  let stockData = JSON.parse(localStorage.getItem(STOCK_KEY)) || {};
+
+  function formatPrice(value){
+    return 'Rp ' + value.toLocaleString('id-ID');
+  }
+
+  function getOrderItems(){
+    const groupedItems = [];
+
+    cart.forEach(item => {
+      const existingItem = groupedItems.find(product => product.id === item.id);
+
+      if(existingItem){
+        existingItem.quantity += 1;
+        return;
+      }
+
+      groupedItems.push({
+        ...item,
+        quantity:1
+      });
+    });
+
+    return groupedItems;
+  }
+
+  function getTotal(){
+    return cart.reduce((total,item) => total + item.price, 0);
+  }
+
+  function syncCart(){
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }
+
+  function getCurrentStock(item){
+    if(Number.isInteger(stockData[item.id])){
+      return stockData[item.id];
+    }
+
+    if(Number.isInteger(item.stock)){
+      return item.stock;
+    }
+
+    return item.quantity;
+  }
+
+  function applyStockAfterOrder(items){
+    items.forEach(item => {
+      stockData[item.id] =
+        Math.max(getCurrentStock(item) - item.quantity, 0);
+    });
+
+    localStorage.setItem(STOCK_KEY, JSON.stringify(stockData));
+  }
+
+  function removeOneItem(id){
+    const index = cart.findIndex(item => item.id === id);
+
+    if(index === -1){
+      return;
+    }
+
+    cart.splice(index, 1);
+    syncCart();
+    renderCheckout();
+  }
+
+  function clearCart(){
+    cart = [];
+    localStorage.removeItem(CART_KEY);
+    renderCheckout();
+  }
+
+  function renderCheckout(){
+    const checkoutItems = document.getElementById('checkout-items');
+    const checkoutTotal = document.getElementById('checkout-total');
+    const checkoutCount = document.getElementById('checkout-count');
+    const emptyState = document.getElementById('empty-state');
+    const checkoutContent = document.getElementById('checkout-content');
+    const submitButton = document.getElementById('submit-order');
+
+    const orderItems = getOrderItems();
+    const total = getTotal();
+
+    checkoutItems.innerHTML = '';
+    checkoutTotal.innerHTML = formatPrice(total);
+    checkoutCount.innerHTML = cart.length + ' item';
+
+    if(cart.length === 0){
+      emptyState.classList.remove('hidden');
+      checkoutContent.classList.add('hidden');
+      submitButton.disabled = true;
+      return;
+    }
+
+    emptyState.classList.add('hidden');
+    checkoutContent.classList.remove('hidden');
+    submitButton.disabled = false;
+
+    orderItems.forEach(item => {
+      checkoutItems.innerHTML += `
+        <div class="flex gap-4 rounded-2xl bg-white/5 p-4">
+          ${
+            item.image
+            ?
+            `<img src="${item.image}" alt="${item.title}" class="h-20 w-20 rounded-xl object-cover">`
+            :
+            `<div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-black/30 text-xs text-zinc-500">No Image</div>`
+          }
+
+          <div class="min-w-0 flex-1">
+            <div class="mb-2 flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs font-semibold text-sky-300">${item.badge}</p>
+                <h3 class="font-bold leading-tight">${item.title}</h3>
+              </div>
+
+              <button
+                type="button"
+                onclick="removeOneItem(${item.id})"
+                class="text-sm font-semibold text-red-400 hover:text-red-300">
+                Hapus
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between text-sm text-zinc-400">
+              <span>${item.quantity} x ${formatPrice(item.price)}</span>
+              <span class="font-semibold text-white">${formatPrice(item.price * item.quantity)}</span>
+            </div>
+
+            <p class="mt-2 text-xs text-zinc-500">
+              Stok tersedia: ${getCurrentStock(item)}
+            </p>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function submitOrder(event){
+    event.preventDefault();
+
+    if(cart.length === 0){
+      alert('Keranjang masih kosong');
+      return;
+    }
+
+    const customerName = document.getElementById('customer-name').value.trim();
+    const customerPhone = document.getElementById('customer-phone').value.trim();
+    const customerAddress = document.getElementById('customer-address').value.trim();
+
+    const orderItems =
+      getOrderItems();
+
+    const unavailableItem =
+      orderItems.find(item => item.quantity > getCurrentStock(item));
+
+    if(unavailableItem){
+      alert(
+        'Stok ' + unavailableItem.title + ' tersisa ' + getCurrentStock(unavailableItem)
+      );
+
+      return;
+    }
+
+    const order = {
+      customerName,
+      customerPhone,
+      customerAddress,
+      items:orderItems,
+      total:getTotal(),
+      createdAt:new Date().toISOString()
+    };
+
+    localStorage.setItem('diecast-last-order', JSON.stringify(order));
+    applyStockAfterOrder(order.items);
+    window.open(
+      'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(buildOrderMessage(order)),
+      '_blank'
+    );
+    clearCart();
+
+    alert('Pesanan berhasil dibuat. Terima kasih!');
+    window.location.href = 'index.html';
+  }
+
+  function buildOrderMessage(order){
+    let message = 'Halo, saya mau pesan:\\n\\n';
+
+    order.items.forEach(item => {
+      message += '- ' + item.title + ' (' + item.badge + ') x' + item.quantity;
+      message += ' = ' + formatPrice(item.price * item.quantity) + '\\n';
+    });
+
+    message += '\\nTotal: ' + formatPrice(order.total);
+    message += '\\nNama: ' + order.customerName;
+    message += '\\nWhatsApp: ' + order.customerPhone;
+    message += '\\nAlamat: ' + order.customerAddress;
+
+    return message;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderCheckout();
+    document.getElementById('checkout-form').addEventListener('submit', submitOrder);
+  });
+</script>
+
+
+<nav class="fixed left-0 top-0 z-50 w-full px-4 py-4">
+  <div class="glass mx-auto flex max-w-7xl items-center justify-between rounded-2xl px-5 py-4">
+    <a href="index.html" class="text-xl font-bold">
+      DIECAST<span class="text-sky-400">GARAGE</span>
+    </a>
+
+    <a
+      href="index.html"
+      class="rounded-xl bg-white px-5 py-2 font-semibold text-black transition hover:bg-sky-100">
+      Kembali
+    </a>
+  </div>
+</nav>
+
+
+<main class="min-h-screen px-4 pb-16 pt-32">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-10 max-w-3xl">
+      <p class="mb-4 inline-flex rounded-full bg-sky-500/10 px-4 py-2 text-xs font-semibold text-sky-300">
+        Checkout
+      </p>
+
+      <h1 class="mb-4 text-5xl font-black leading-tight md:text-6xl">
+        Selesaikan
+        <span class="gradient-text block">Pesanan Kamu</span>
+      </h1>
+
+      <p class="text-zinc-400">
+        Barang dari halaman utama otomatis muncul di sini.
+      </p>
+    </div>
+
+    <div id="empty-state" class="glass hidden rounded-[32px] p-8 text-center">
+      <h2 class="mb-3 text-2xl font-black">Keranjang masih kosong</h2>
+      <p class="mb-6 text-zinc-400">Pilih diecast favorit kamu dulu dari halaman utama.</p>
+      <a
+        href="index.html#collection"
+        class="inline-flex rounded-2xl bg-sky-500 px-6 py-3 font-bold text-black transition hover:bg-sky-400">
+        Belanja Sekarang
+      </a>
+    </div>
+
+    <div id="checkout-content" class="grid gap-6 lg:grid-cols-[1fr_420px]">
+      <section class="glass rounded-[32px] p-6 md:p-8">
+        <div class="mb-6 flex items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-black">Detail Pembeli</h2>
+            <p class="text-sm text-zinc-400">Isi data untuk lanjut membuat pesanan.</p>
+          </div>
+        </div>
+
+        <form id="checkout-form" class="space-y-5">
+          <div>
+            <label for="customer-name" class="mb-2 block text-sm font-semibold text-zinc-300">Nama</label>
+            <input
+              id="customer-name"
+              type="text"
+              required
+              class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-white outline-none transition placeholder:text-zinc-600 focus:border-sky-400"
+              placeholder="Nama lengkap">
+          </div>
+
+          <div>
+            <label for="customer-phone" class="mb-2 block text-sm font-semibold text-zinc-300">Nomor WhatsApp</label>
+            <input
+              id="customer-phone"
+              type="tel"
+              required
+              class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-white outline-none transition placeholder:text-zinc-600 focus:border-sky-400"
+              placeholder="08xxxxxxxxxx">
+          </div>
+
+          <div>
+            <label for="customer-address" class="mb-2 block text-sm font-semibold text-zinc-300">Alamat</label>
+            <textarea
+              id="customer-address"
+              required
+              rows="5"
+              class="w-full resize-none rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-white outline-none transition placeholder:text-zinc-600 focus:border-sky-400"
+              placeholder="Alamat pengiriman lengkap"></textarea>
+          </div>
+
+          <button
+            id="submit-order"
+            type="submit"
+            class="w-full rounded-2xl bg-sky-500 px-6 py-4 font-black text-black transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50">
+            Kirim Pesanan
+          </button>
+        </form>
+      </section>
+
+      <aside class="glass h-fit rounded-[32px] p-6 md:p-8">
+        <div class="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-black">Ringkasan</h2>
+            <p id="checkout-count" class="text-sm text-zinc-400">0 item</p>
+          </div>
+
+          <button
+            type="button"
+            onclick="clearCart()"
+            class="rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-zinc-300 transition hover:bg-white/15">
+            Kosongkan
+          </button>
+        </div>
+
+        <div id="checkout-items" class="space-y-4"></div>
+
+        <div class="mt-6 border-t border-white/10 pt-6">
+          <div class="flex items-center justify-between">
+            <span class="text-zinc-400">Total</span>
+            <strong id="checkout-total" class="text-3xl font-black text-sky-400">Rp 0</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
