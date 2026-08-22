@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#2563eb">
+  <title>Admin Preview - Aluna Store</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/alfarizky1191-collab/aluna-store@8a066996e3dbb23b271ae9e9c970715d08816124/assets/css/admin.css">
+</head>
+<body>
+  <section class="login-shell" id="login-view">
+    <form class="login-card" id="login-form">
+      <div class="login-card__logo">AS</div>
+      <h1>Admin Aluna Store</h1>
+      <p>Masuk untuk mengelola Food dan Premium Apps.</p>
+      <label class="field"><span>Email</span><input id="login-email" type="email" autocomplete="username" required></label>
+      <label class="field"><span>Password</span><input id="login-password" type="password" autocomplete="current-password" minlength="8" required></label>
+      <button class="primary-btn full-btn" id="login-button" type="submit">Masuk</button>
+      <div class="auth-message" id="auth-message" role="alert"></div>
+    </form>
+  </section>
+  <section class="hidden" id="dashboard-view">
+    <header class="admin-header">
+      <div><h1>Aluna Store Admin</h1><small id="admin-email"></small></div>
+      <button class="secondary-btn" id="logout-button" type="button">Keluar</button>
+    </header>
+    <main class="admin-shell">
+      <div class="toolbar">
+        <div class="tabs" role="tablist" aria-label="Kategori produk">
+          <button class="tab active" type="button" data-category="food">Food</button>
+          <button class="tab" type="button" data-category="apps">Premium Apps</button>
+        </div>
+        <button class="primary-btn" id="new-product-button" type="button">+ Tambah Produk</button>
+      </div>
+      <section class="product-list" id="product-list" aria-live="polite"><div class="state-box">Memuat produk...</div></section>
+    </main>
+  </section>
+  <div class="editor" id="editor" role="dialog" aria-modal="true" aria-labelledby="editor-title">
+    <div class="editor__panel">
+      <div class="editor__header"><h2 id="editor-title">Tambah Produk</h2><button class="close-btn" id="close-editor" type="button" aria-label="Tutup">×</button></div>
+      <form id="product-form">
+        <input id="product-id" type="hidden">
+        <div class="form-grid">
+          <label class="field"><span>Kategori</span><select id="product-category" required><option value="food">Food</option><option value="apps">Premium Apps</option></select></label>
+          <label class="field"><span>Nama produk</span><input id="product-name" maxlength="100" required></label>
+          <label class="field span-2"><span>Deskripsi singkat</span><textarea id="product-description" maxlength="300"></textarea></label>
+          <label class="field"><span>Harga dasar</span><input id="product-price" type="number" min="0" step="100" required></label>
+          <label class="field"><span>Urutan tampil</span><input id="product-sort" type="number" min="0" step="1" value="0" required></label>
+          <label class="field span-2"><span>URL gambar saat ini</span><input id="product-image-url" type="url" placeholder="https://..."></label>
+          <label class="field span-2"><span>Upload gambar baru (maks. 5 MB)</span><input id="product-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="image-preview" id="image-preview">Belum ada gambar</span></label>
+        </div>
+        <div class="check-row">
+          <label><input id="product-active" type="checkbox" checked> Tampilkan produk</label>
+          <label><input id="product-featured" type="checkbox"> Best Seller</label>
+        </div>
+        <section class="repeater">
+          <div class="repeater__heading"><div><h3>Varian harga</h3><small>Contoh: Sharing, Private, 1 Bulan</small></div><button class="secondary-btn" id="add-variant" type="button">+ Varian</button></div>
+          <div id="variant-rows"></div>
+        </section>
+        <section class="repeater">
+          <div class="repeater__heading"><div><h3>Pilihan tambahan</h3><small>Contoh: grup Level → Level 1; grup Tipe → Kuah</small></div><button class="secondary-btn" id="add-option" type="button">+ Pilihan</button></div>
+          <div id="option-rows"></div>
+        </section>
+        <div class="form-actions">
+          <button class="secondary-btn" id="cancel-editor" type="button">Batal</button>
+          <button class="primary-btn" id="save-button" type="submit">Simpan Produk</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="toast hidden" id="toast" role="status"></div>
+  <script type="module" src="https://cdn.jsdelivr.net/gh/alfarizky1191-collab/aluna-store@8a066996e3dbb23b271ae9e9c970715d08816124/assets/js/admin.js"></script>
+</body>
+</html>
