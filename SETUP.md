@@ -1,16 +1,17 @@
 # Setup Aluna Store Dinamis
 
-Kode di branch ini tidak mengubah website aktif sampai konfigurasi selesai dan branch digabung ke `main`.
+Kode di branch ini tidak mengubah website aktif sampai pengujian selesai dan branch digabung ke `main`.
 
-## 1. Buat proyek Supabase
+## Status Supabase
 
-1. Buat satu proyek khusus Aluna Store.
-2. Buka **SQL Editor**.
-3. Salin dan jalankan seluruh isi `supabase/schema.sql`.
+- Proyek: `aluna-store`
+- Region: Singapore (`ap-southeast-1`)
+- Schema, RLS, Storage, dan data awal sudah dipasang.
+- Website sudah menggunakan modern publishable key, bukan `service_role`/secret key.
 
-Schema tersebut membuat tabel produk, varian, pilihan, bucket gambar, data produk lama, serta aturan Row Level Security (RLS).
+File `supabase/schema.sql` disimpan sebagai sumber schema dan pemulihan. Jangan menjalankannya ulang tanpa meninjau perubahan data lebih dahulu.
 
-## 2. Buat satu akun admin
+## 1. Buat satu akun admin
 
 1. Buka **Authentication → Users → Add user**.
 2. Buat user dengan email dan password admin.
@@ -25,19 +26,7 @@ on conflict (user_id) do nothing;
 
 Setelah akun berhasil dibuat, matikan pendaftaran publik pada pengaturan Authentication karena aplikasi ini hanya menggunakan satu admin.
 
-## 3. Hubungkan website
-
-Ambil **Project URL** dan **Publishable key** dari pengaturan API Supabase, lalu isi:
-
-```js
-// assets/js/config.js
-export const SUPABASE_URL = "https://PROJECT.supabase.co";
-export const SUPABASE_PUBLISHABLE_KEY = "PUBLISHABLE_KEY";
-```
-
-Publishable key memang digunakan di browser. Keamanan tetap dijaga oleh RLS. Jangan pernah memasukkan `service_role` key ke repository atau JavaScript website.
-
-## 4. Pengujian sebelum merge
+## 2. Pengujian sebelum merge
 
 1. Login ke `/admin/`.
 2. Tambah satu produk percobaan beserta foto.

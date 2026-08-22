@@ -3,6 +3,10 @@
 
 create extension if not exists pgcrypto;
 
+create schema if not exists private;
+revoke all on schema private from public;
+grant usage on schema private to anon, authenticated;
+
 create table if not exists public.admins (
   user_id uuid primary key references auth.users(id) on delete cascade,
   created_at timestamptz not null default now()
@@ -47,10 +51,11 @@ create index if not exists products_category_active_sort_idx on public.products(
 create index if not exists product_variants_product_sort_idx on public.product_variants(product_id, sort_order);
 create index if not exists product_options_product_sort_idx on public.product_options(product_id, sort_order);
 
-create or replace function public.set_updated_at()
+create or replace function private.set_updated_at()
 returns trigger
 language plpgsql
-set search_path = public
+security invoker
+set search_path = ''
 as $$
 begin
   new.updated_at = now();
@@ -61,58 +66,65 @@ $$;
 drop trigger if exists products_set_updated_at on public.products;
 create trigger products_set_updated_at
 before update on public.products
-for each row execute function public.set_updated_at();
+for each row execute function private.set_updated_at();
 
-create or replace function public.is_admin()
+create or replace function private.is_admin()
 returns boolean
 language sql
 stable
 security definer
-set search_path = public
+set search_path = ''
 as $$
-  select exists (
-    select 1 from public.admins where user_id = auth.uid()
-  );
+  select (select auth.uid()) is not null
+    and exists (
+      select 1 from public.admins where user_id = (select auth.uid())
+    );
 $$;
 
-revoke all on function public.is_admin() from public;
-grant execute on function public.is_admin() to anon, authenticated;
+revoke all on function private.is_admin() from public;
+grant execute on function private.is_admin() to anon, authenticated;
 
 alter table public.admins enable row level security;
 alter table public.products enable row level security;
 alter table public.product_variants enable row level security;
 alter table public.product_options enable row level security;
 
+revoke all on table public.admins from anon;
+grant select on table public.admins to authenticated;
+revoke insert, update, delete on table public.products, public.product_variants, public.product_options from anon;
+grant select on table public.products, public.product_variants, public.product_options to anon;
+grant select, insert, update, delete on table public.products, public.product_variants, public.product_options to authenticated;
+
 drop policy if exists "Admin reads own access" on public.admins;
 create policy "Admin reads own access" on public.admins
 for select to authenticated
-using (user_id = auth.uid());
+using (user_id = (select auth.uid()));
 
 drop policy if exists "Public reads active products" on public.products;
 create policy "Public reads active products" on public.products
 for select to anon, authenticated
-using (is_active or public.is_admin());
+using (is_active or (select private.is_admin()));
 
 drop policy if exists "Admin inserts products" on public.products;
 create policy "Admin inserts products" on public.products
 for insert to authenticated
-with check (public.is_admin());
+with check ((select private.is_admin()));
 
 drop policy if exists "Admin updates products" on public.products;
 create policy "Admin updates products" on public.products
 for update to authenticated
-using (public.is_admin()) with check (public.is_admin());
+using ((select private.is_admin())) with check ((select private.is_admin()));
 
 drop policy if exists "Admin deletes products" on public.products;
 create policy "Admin deletes products" on public.products
 for delete to authenticated
-using (public.is_admin());
+using ((select private.is_admin()));
 
 drop policy if exists "Public reads active variants" on public.product_variants;
 create policy "Public reads active variants" on public.product_variants
 for select to anon, authenticated
 using (
-  public.is_admin() or (
+  (select private.is_admin()) or (
     is_active and exists (
       select 1 from public.products
       where products.id = product_variants.product_id and products.is_active
@@ -122,19 +134,19 @@ using (
 
 drop policy if exists "Admin inserts variants" on public.product_variants;
 create policy "Admin inserts variants" on public.product_variants
-for insert to authenticated with check (public.is_admin());
+for insert to authenticated with check ((select private.is_admin()));
 drop policy if exists "Admin updates variants" on public.product_variants;
 create policy "Admin updates variants" on public.product_variants
-for update to authenticated using (public.is_admin()) with check (public.is_admin());
+for update to authenticated using ((select private.is_admin())) with check ((select private.is_admin()));
 drop policy if exists "Admin deletes variants" on public.product_variants;
 create policy "Admin deletes variants" on public.product_variants
-for delete to authenticated using (public.is_admin());
+for delete to authenticated using ((select private.is_admin()));
 
 drop policy if exists "Public reads active options" on public.product_options;
 create policy "Public reads active options" on public.product_options
 for select to anon, authenticated
 using (
-  public.is_admin() or (
+  (select private.is_admin()) or (
     is_active and exists (
       select 1 from public.products
       where products.id = product_options.product_id and products.is_active
@@ -144,13 +156,13 @@ using (
 
 drop policy if exists "Admin inserts options" on public.product_options;
 create policy "Admin inserts options" on public.product_options
-for insert to authenticated with check (public.is_admin());
+for insert to authenticated with check ((select private.is_admin()));
 drop policy if exists "Admin updates options" on public.product_options;
 create policy "Admin updates options" on public.product_options
-for update to authenticated using (public.is_admin()) with check (public.is_admin());
+for update to authenticated using ((select private.is_admin())) with check ((select private.is_admin()));
 drop policy if exists "Admin deletes options" on public.product_options;
 create policy "Admin deletes options" on public.product_options
-for delete to authenticated using (public.is_admin());
+for delete to authenticated using ((select private.is_admin()));
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
@@ -167,23 +179,23 @@ on conflict (id) do update set
 
 drop policy if exists "Public reads product images" on storage.objects;
 create policy "Public reads product images" on storage.objects
-for select to public using (bucket_id = 'product-images');
+for select to anon, authenticated using (bucket_id = 'product-images');
 
 drop policy if exists "Admin uploads product images" on storage.objects;
 create policy "Admin uploads product images" on storage.objects
 for insert to authenticated
-with check (bucket_id = 'product-images' and public.is_admin());
+with check (bucket_id = 'product-images' and (select private.is_admin()));
 
 drop policy if exists "Admin updates product images" on storage.objects;
 create policy "Admin updates product images" on storage.objects
 for update to authenticated
-using (bucket_id = 'product-images' and public.is_admin())
-with check (bucket_id = 'product-images' and public.is_admin());
+using (bucket_id = 'product-images' and (select private.is_admin()))
+with check (bucket_id = 'product-images' and (select private.is_admin()));
 
 drop policy if exists "Admin deletes product images" on storage.objects;
 create policy "Admin deletes product images" on storage.objects
 for delete to authenticated
-using (bucket_id = 'product-images' and public.is_admin());
+using (bucket_id = 'product-images' and (select private.is_admin()));
 
 -- Data awal dari website lama. ON CONFLICT DO NOTHING agar perubahan admin tidak tertimpa.
 insert into public.products (id, category, name, image_url, base_price, is_featured, sort_order)
