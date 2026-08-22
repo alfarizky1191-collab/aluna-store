@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#ff6b00">
+  <title>Preview Aluna Eats</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/alfarizky1191-collab/aluna-store@8a066996e3dbb23b271ae9e9c970715d08816124/assets/css/catalog.css">
+</head>
+<body class="food-theme">
+  <header class="shop-header"><a class="shop-header__back" href="../">← Preview</a><h1>🍴 ALUNA EATS</h1><p>Street food premium • cepat &amp; murah</p></header>
+  <main class="catalog-shell">
+    <div class="catalog-toolbar"><input class="search-input" id="search" type="search" placeholder="Cari makanan..." autocomplete="off"></div>
+    <section class="product-grid" id="product-grid" aria-live="polite"><div class="state-card"><p>Memuat menu...</p></div></section>
+  </main>
+  <button class="cart-bar" id="cart-bar" type="button" aria-label="Lihat keranjang"><span class="cart-bar__summary"><small>🛒 <span id="cart-count">0</span> item</small><strong id="cart-total">Rp0</strong></span><span class="primary-button">Lihat Keranjang</span></button>
+  <div class="modal" id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+    <div class="modal__content"><div class="modal__header"><h2 id="cart-title">Detail Pesanan</h2><button class="icon-button" id="close-modal" type="button" aria-label="Tutup">×</button></div><div id="cart-list"></div><div class="modal__total"><span>Total</span><span id="modal-total">Rp0</span></div><div class="modal__actions"><button class="primary-button primary-button--success" id="checkout-button" type="button">Pesan Sekarang</button><button class="secondary-button" id="continue-button" type="button">Kembali Belanja</button></div></div>
+  </div>
+  <script type="module" src="https://cdn.jsdelivr.net/gh/alfarizky1191-collab/aluna-store@8a066996e3dbb23b271ae9e9c970715d08816124/assets/js/food.js"></script>
+</body>
+</html>
