@@ -6,8 +6,10 @@ import {
   getProducts,
   getSelection,
   groupOptions,
+  isProductSoldOut,
   isSupabaseConfigured,
   makeCartKey,
+  productStockLabel,
   readCart,
   renderErrorState,
   renderSetupState,
@@ -40,17 +42,21 @@ export async function initShop({ category, cartKey, checkoutUrl }) {
   }
 
   function cleanCart() {
-    const { invalidKeys } = resolveCart(cart, products);
-    if (!invalidKeys.length) return;
-    cart = cart.filter((item) => !invalidKeys.includes(item.key));
+    const { items, invalidKeys, adjustedKeys } = resolveCart(cart, products);
+    if (!invalidKeys.length && !adjustedKeys.length) return;
+    const quantityByKey = new Map(items.map((item) => [item.key, item.qty]));
+    cart = cart
+      .filter((item) => !invalidKeys.includes(item.key) && quantityByKey.has(item.key))
+      .map((item) => ({ ...item, qty: quantityByKey.get(item.key) }));
     writeCart(cartKey, cart);
   }
 
   function variantsMarkup(product) {
     if (!product.product_variants.length) return "";
+    const disabled = isProductSoldOut(product) ? " disabled" : "";
     return `
       <label class="field-label">Pilih paket
-        <select class="product-select" data-variant>
+        <select class="product-select" data-variant${disabled}>
           ${product.product_variants.map((variant) => `
             <option value="${escapeHtml(variant.id)}">${escapeHtml(variant.name)} — ${formatRupiah(variant.price)}</option>
           `).join("")}
@@ -60,9 +66,10 @@ export async function initShop({ category, cartKey, checkoutUrl }) {
   }
 
   function optionsMarkup(product) {
+    const disabled = isProductSoldOut(product) ? " disabled" : "";
     return Object.entries(groupOptions(product)).map(([groupName, options]) => `
       <label class="field-label">${escapeHtml(groupName)}
-        <select class="product-select" data-option-group="${escapeHtml(groupName)}">
+        <select class="product-select" data-option-group="${escapeHtml(groupName)}"${disabled}>
           ${options.map((option) => `
             <option value="${escapeHtml(option.id)}">
               ${escapeHtml(option.name)}${option.price_adjustment ? ` (+${formatRupiah(option.price_adjustment)})` : ""}
@@ -74,23 +81,27 @@ export async function initShop({ category, cartKey, checkoutUrl }) {
   }
 
   function productMarkup(product) {
+    const soldOut = isProductSoldOut(product);
     const firstVariant = product.product_variants[0] || null;
     const firstOptions = Object.values(groupOptions(product)).map((items) => items[0]).filter(Boolean);
     const startingPrice = calculateUnitPrice(product, firstVariant, firstOptions);
+    const stockText = productStockLabel(product);
     return `
-      <article class="product-card" data-product-id="${escapeHtml(product.id)}">
-        ${product.is_featured ? '<span class="featured-badge">🔥 BEST</span>' : ""}
+      <article class="product-card ${soldOut ? "product-card--sold-out" : ""}" data-product-id="${escapeHtml(product.id)}">
+        ${product.is_featured && !soldOut ? '<span class="featured-badge">🔥 BEST</span>' : ""}
+        ${soldOut ? '<span class="sold-out-badge">SOLD OUT</span>' : ""}
         <div class="product-card__image"><img src="${escapeHtml(product.image_url || "")}" alt="${escapeHtml(product.name)}" loading="lazy"></div>
         <div class="product-card__body">
           <h2 class="product-card__name">${escapeHtml(product.name)}</h2>
           ${product.description ? `<p class="product-card__description">${escapeHtml(product.description)}</p>` : ""}
           <div class="product-card__price" data-price>${formatRupiah(startingPrice)}</div>
+          ${product.stock_quantity !== null ? `<div class="stock-label ${soldOut ? "stock-label--sold-out" : ""}">${escapeHtml(stockText)}</div>` : ""}
           ${variantsMarkup(product)}
           ${optionsMarkup(product)}
           <div class="qty-control">
-            <button type="button" data-action="decrease" aria-label="Kurangi ${escapeHtml(product.name)}">−</button>
+            <button type="button" data-action="decrease" aria-label="Kurangi ${escapeHtml(product.name)}"${soldOut ? " disabled" : ""}>−</button>
             <span data-qty>0</span>
-            <button type="button" data-action="increase" aria-label="Tambah ${escapeHtml(product.name)}">+</button>
+            <button type="button" data-action="increase" aria-label="Tambah ${escapeHtml(product.name)}"${soldOut ? " disabled" : ""}>+</button>
           </div>
         </div>
       </article>
@@ -120,9 +131,21 @@ export async function initShop({ category, cartKey, checkoutUrl }) {
     return { product, variant, options, key };
   }
 
+  function quantityInCartForProduct(productId) {
+    return cart
+      .filter((item) => item.product_id === productId)
+      .reduce((sum, item) => sum + Math.max(0, Number.parseInt(item.qty, 10) || 0), 0);
+  }
+
   function changeQuantity(card, delta) {
     const state = getCardState(card);
-    if (!state) return;
+    if (!state || isProductSoldOut(state.product)) return;
+
+    if (delta > 0 && state.product.stock_quantity !== null) {
+      const currentProductQty = quantityInCartForProduct(state.product.id);
+      if (currentProductQty >= state.product.stock_quantity) return;
+    }
+
     const existing = cart.find((item) => item.key === state.key);
     if (existing) {
       existing.qty += delta;
@@ -150,6 +173,16 @@ export async function initShop({ category, cartKey, checkoutUrl }) {
       card.querySelector("[data-price]").textContent = formatRupiah(
         calculateUnitPrice(state.product, state.variant, state.options),
       );
+
+      const increaseButton = card.querySelector('[data-action="increase"]');
+      const decreaseButton = card.querySelector('[data-action="decrease"]');
+      const soldOut = isProductSoldOut(state.product);
+      if (increaseButton) {
+        const atLimit = state.product.stock_quantity !== null
+          && quantityInCartForProduct(state.product.id) >= state.product.stock_quantity;
+        increaseButton.disabled = soldOut || atLimit;
+      }
+      if (decreaseButton) decreaseButton.disabled = soldOut || !cartItem?.qty;
     });
   }
 
@@ -190,6 +223,7 @@ export async function initShop({ category, cartKey, checkoutUrl }) {
   }
 
   function openModal() {
+    cleanCart();
     renderCart();
     modal.classList.add("is-open");
     document.body.style.overflow = "hidden";
@@ -202,7 +236,7 @@ export async function initShop({ category, cartKey, checkoutUrl }) {
 
   grid.addEventListener("click", (event) => {
     const action = event.target.closest("[data-action]");
-    if (!action) return;
+    if (!action || action.disabled) return;
     const card = action.closest(".product-card");
     changeQuantity(card, action.dataset.action === "increase" ? 1 : -1);
   });
@@ -233,6 +267,11 @@ export async function initShop({ category, cartKey, checkoutUrl }) {
   });
   document.getElementById("checkout-button").addEventListener("click", () => {
     if (!cart.length) return;
+    cleanCart();
+    if (!cart.length) {
+      updateCartUi();
+      return;
+    }
     writeCart(cartKey, cart);
     window.location.href = checkoutUrl;
   });
