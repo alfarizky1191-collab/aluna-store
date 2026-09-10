@@ -11,6 +11,7 @@ const PRODUCT_SELECT = `
   base_price,
   is_featured,
   is_active,
+  stock_quantity,
   sort_order,
   product_variants (
     id,
@@ -47,9 +48,15 @@ export function escapeHtml(value = "") {
 }
 
 function normalizeProduct(product) {
+  const rawStock = product.stock_quantity;
+  const stockQuantity = rawStock === null || rawStock === undefined
+    ? null
+    : Math.max(0, Number.parseInt(rawStock, 10) || 0);
+
   return {
     ...product,
     base_price: Number(product.base_price) || 0,
+    stock_quantity: stockQuantity,
     product_variants: [...(product.product_variants || [])]
       .filter((variant) => variant.is_active)
       .map((variant) => ({ ...variant, price: Number(variant.price) || 0 }))
@@ -62,6 +69,16 @@ function normalizeProduct(product) {
       }))
       .sort((a, b) => a.sort_order - b.sort_order),
   };
+}
+
+export function isProductSoldOut(product) {
+  return product.stock_quantity !== null && product.stock_quantity <= 0;
+}
+
+export function productStockLabel(product) {
+  if (product.stock_quantity === null) return "Stok tidak dibatasi";
+  if (product.stock_quantity <= 0) return "SOLD OUT";
+  return `Stok ${product.stock_quantity}`;
 }
 
 export async function getProducts(category, { includeInactive = false } = {}) {
@@ -150,12 +167,17 @@ export function writeCart(key, cart) {
 
 export function resolveCart(cart, products) {
   const productsById = new Map(products.map((product) => [product.id, product]));
+  const remainingStock = new Map(products.map((product) => [
+    product.id,
+    product.stock_quantity === null ? Number.POSITIVE_INFINITY : product.stock_quantity,
+  ]));
   const invalidKeys = [];
+  const adjustedKeys = [];
   const items = [];
 
   for (const cartItem of cart) {
     const product = productsById.get(cartItem.product_id);
-    if (!product || !product.is_active) {
+    if (!product || !product.is_active || isProductSoldOut(product)) {
       invalidKeys.push(cartItem.key);
       continue;
     }
@@ -176,7 +198,16 @@ export function resolveCart(cart, products) {
       continue;
     }
 
-    const qty = Math.max(1, Number.parseInt(cartItem.qty, 10) || 1);
+    const requestedQty = Math.max(1, Number.parseInt(cartItem.qty, 10) || 1);
+    const availableQty = remainingStock.get(product.id) ?? Number.POSITIVE_INFINITY;
+    const qty = Math.min(requestedQty, availableQty);
+    if (qty <= 0) {
+      invalidKeys.push(cartItem.key);
+      continue;
+    }
+    if (qty !== requestedQty) adjustedKeys.push(cartItem.key);
+    remainingStock.set(product.id, availableQty - qty);
+
     const unitPrice = calculateUnitPrice(product, variant, options);
     items.push({
       key: cartItem.key,
@@ -189,7 +220,7 @@ export function resolveCart(cart, products) {
     });
   }
 
-  return { items, invalidKeys };
+  return { items, invalidKeys, adjustedKeys };
 }
 
 export function renderSetupState(container) {

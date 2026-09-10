@@ -21,6 +21,7 @@ create table if not exists public.products (
   base_price integer not null default 0 check (base_price >= 0),
   is_featured boolean not null default false,
   is_active boolean not null default true,
+  stock_quantity integer check (stock_quantity is null or stock_quantity >= 0),
   sort_order integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
