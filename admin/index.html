@@ -34,7 +34,19 @@
         </div>
         <button class="primary-btn" id="new-product-button" type="button">+ Tambah Produk</button>
       </div>
-      <section class="product-list" id="product-list" aria-live="polite"><div class="state-box">Memuat produk...</div></section>
+      <section class="stock-section" aria-labelledby="stock-title">
+        <div class="stock-section__heading">
+          <div>
+            <h2 id="stock-title">Stok & Ketersediaan</h2>
+            <p>Isi jumlah stok. Stok 0 akan tampil SOLD OUT dan tidak bisa dipesan. Kosong berarti stok tidak dibatasi.</p>
+          </div>
+        </div>
+        <div class="stock-list" id="stock-list" aria-live="polite"><div class="state-box">Memuat stok...</div></div>
+      </section>
+      <section class="product-section" aria-labelledby="product-title">
+        <h2 class="section-title" id="product-title">Kelola Produk</h2>
+        <section class="product-list" id="product-list" aria-live="polite"><div class="state-box">Memuat produk...</div></section>
+      </section>
     </main>
   </section>
 
@@ -77,5 +89,6 @@
 
   <div class="toast hidden" id="toast" role="status"></div>
   <script type="module" src="../assets/js/admin.js"></script>
+  <script type="module" src="../assets/js/admin-stock.js"></script>
 </body>
 </html>
