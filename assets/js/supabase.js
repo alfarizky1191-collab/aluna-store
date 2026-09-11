@@ -1,11 +1,12 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/+esm";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./config.js";
 
+const createClient = globalThis.supabase?.createClient;
 const configured =
   SUPABASE_URL.startsWith("https://") &&
   !SUPABASE_URL.includes("YOUR_") &&
   SUPABASE_PUBLISHABLE_KEY.length > 20 &&
-  !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_");
+  !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_") &&
+  typeof createClient === "function";
 
 export const isSupabaseConfigured = configured;
 export const supabase = configured
@@ -21,7 +22,7 @@ export const supabase = configured
 export function requireSupabase() {
   if (!supabase) {
     throw new Error(
-      "Supabase belum dikonfigurasi. Isi assets/js/config.js sesuai SETUP.md.",
+      "Supabase belum siap. Pastikan konfigurasi dan library lokal Supabase tersedia.",
     );
   }
   return supabase;
