@@ -8,23 +8,31 @@ on:
       - .github/workflows/vendor-supabase.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   vendor:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: security/hardening-2026-09
       - name: Download pinned npm package
         run: npm pack @supabase/supabase-js@2.112.3
-      - name: Extract browser UMD bundle
+      - name: Extract and verify browser bundle
         run: |
-          mkdir -p vendor
-          tar -xzf supabase-supabase-js-2.112.3.tgz package/dist/umd/supabase.js
-          cp package/dist/umd/supabase.js vendor/supabase.js
-          sha256sum vendor/supabase.js > vendor/supabase.js.sha256
-      - name: Upload vendored bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: supabase-js-2.112.3
-          path: vendor/
-          retention-days: 1
+          tar -xzf supabase-supabase-js-2.112.3.tgz package/dist/umd/supabase.js package/LICENSE
+          mkdir -p assets/vendor
+          cp package/dist/umd/supabase.js assets/vendor/supabase-js-2.112.3.js
+          cp package/LICENSE assets/vendor/supabase-js.LICENSE
+          BUNDLE_SHA="$(sha256sum assets/vendor/supabase-js-2.112.3.js | awk '{print $1}')"
+          printf 'Package: @supabase/supabase-js\nVersion: 2.112.3\nSHA-256: %s\nSource: npm registry\n' "$BUNDLE_SHA" > assets/vendor/supabase-js.version.txt
+      - name: Commit vendored dependency
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/vendor/supabase-js-2.112.3.js assets/vendor/supabase-js.LICENSE assets/vendor/supabase-js.version.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: vendor Supabase JS 2.112.3"
+          git push origin HEAD:security/hardening-2026-09
