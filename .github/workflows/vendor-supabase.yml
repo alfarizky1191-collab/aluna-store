@@ -1,4 +1,4 @@
-name: Vendor Supabase JS
+name: Sync Security Hardening
 
 on:
   push:
@@ -11,28 +11,53 @@ permissions:
   contents: write
 
 jobs:
-  vendor:
+  sync-schema:
     runs-on: ubuntu-latest
     steps:
       - name: Check out branch
         uses: actions/checkout@v4
         with:
           ref: security/hardening-2026-09
-      - name: Download pinned npm package
-        run: npm pack @supabase/supabase-js@2.112.3
-      - name: Extract and verify browser bundle
+      - name: Patch recovery schema
         run: |
-          tar -xzf supabase-supabase-js-2.112.3.tgz package/dist/umd/supabase.js package/LICENSE
-          mkdir -p assets/vendor
-          cp package/dist/umd/supabase.js assets/vendor/supabase-js-2.112.3.js
-          cp package/LICENSE assets/vendor/supabase-js.LICENSE
-          BUNDLE_SHA="$(sha256sum assets/vendor/supabase-js-2.112.3.js | awk '{print $1}')"
-          printf 'Package: @supabase/supabase-js\nVersion: 2.112.3\nSHA-256: %s\nSource: npm registry\n' "$BUNDLE_SHA" > assets/vendor/supabase-js.version.txt
-      - name: Commit vendored dependency
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('supabase/schema.sql')
+          text = path.read_text()
+          old_grants = '''revoke all on table public.admins from anon;
+          grant select on table public.admins to authenticated;
+          revoke insert, update, delete on table public.products, public.product_variants, public.product_options from anon;
+          grant select on table public.products, public.product_variants, public.product_options to anon;
+          grant select, insert, update, delete on table public.products, public.product_variants, public.product_options to authenticated;'''
+          new_grants = '''revoke all privileges on table public.admins from anon, authenticated;
+          grant select on table public.admins to authenticated;
+          revoke all privileges on table public.products, public.product_variants, public.product_options from anon, authenticated;
+          grant select on table public.products, public.product_variants, public.product_options to anon;
+          grant select, insert, update, delete on table public.products, public.product_variants, public.product_options to authenticated;'''
+          if old_grants not in text and new_grants not in text:
+              raise SystemExit('Expected grant block not found')
+          text = text.replace(old_grants, new_grants)
+
+          marker = '''$$;
+
+          drop trigger if exists products_set_updated_at on public.products;'''
+          replacement = '''$$;
+
+          revoke execute on function private.set_updated_at() from public;
+
+          drop trigger if exists products_set_updated_at on public.products;'''
+          if 'revoke execute on function private.set_updated_at() from public;' not in text:
+              if marker not in text:
+                  raise SystemExit('Trigger function marker not found')
+              text = text.replace(marker, replacement, 1)
+
+          path.write_text(text)
+          PY
+      - name: Commit schema sync
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/vendor/supabase-js-2.112.3.js assets/vendor/supabase-js.LICENSE assets/vendor/supabase-js.version.txt
+          git add supabase/schema.sql
           git diff --cached --quiet && exit 0
-          git commit -m "chore: vendor Supabase JS 2.112.3"
+          git commit -m "security: sync least-privilege grants in recovery schema"
           git push origin HEAD:security/hardening-2026-09
