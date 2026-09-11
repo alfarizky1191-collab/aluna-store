@@ -6,6 +6,8 @@
 <meta name="description" content="Aluna Store - Premium Apps, Food, Diecast dan kebutuhan digital lainnya.">
 <meta name="keywords" content="aluna store,premium apps,food,diecast,digital store">
 <meta name="theme-color" content="#38bdf8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; font-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <title>ALUNA STORE</title>
 <!-- Google tag (gtag.js) -->
@@ -14,7 +16,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-J83J8QQFDW');
 </script>
 
@@ -46,7 +47,6 @@ body::before{
   to{background-size:110%}
 }
 
-/* HEADER */
 header{
   display:flex;
   justify-content:space-between;
@@ -60,7 +60,6 @@ header h1{
   font-size:20px;
 }
 
-/* NAV */
 nav a{
   margin-left:15px;
   text-decoration:none;
@@ -73,7 +72,6 @@ nav a:hover{
   opacity:1;
 }
 
-/* HERO */
 .hero{
   height:80vh;
   display:flex;
@@ -102,7 +100,6 @@ nav a:hover{
   cursor:pointer;
 }
 
-/* FEATURES */
 .features{
   display:grid;
   grid-template-columns:1fr;
@@ -110,14 +107,12 @@ nav a:hover{
   padding:20px;
 }
 
-/* CARD */
 .card{
   background:rgba(0,0,0,0.5);
   padding:20px;
   border-radius:15px;
   text-decoration:none;
   color:white;
-
   opacity:0;
   transform:scale(0.7) rotate(-8deg);
   transition:0.5s ease;
@@ -133,7 +128,6 @@ nav a:hover{
   background:rgba(0,0,0,0.7);
 }
 
-/* ICON */
 .icon{
   width:28px;
   height:28px;
@@ -141,7 +135,6 @@ nav a:hover{
   fill:#38bdf8;
 }
 
-/* FOOTER */
 footer{
   text-align:center;
   opacity:.6;
@@ -155,7 +148,6 @@ footer{
 </head>
 
 <body>
-
 <header>
   <h1>ALUNA STORE</h1>
   <nav>
@@ -173,8 +165,6 @@ footer{
 </section>
 
 <section class="features">
-
-<!-- DIECAST -->
 <a href="#" class="card">
   <svg class="icon" viewBox="0 0 24 24">
     <path d="M3 13l1-3 2-2h12l2 2 1 3v5h-2v-2H5v2H3zM6 10l-1 2h14l-1-2H6z"/>
@@ -183,7 +173,6 @@ footer{
   <p>Koleksi mobil mini premium & unik.</p>
 </a>
 
-<!-- APPS -->
 <a href="apps/index.html" class="card">
   <svg class="icon" viewBox="0 0 24 24">
     <path d="M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm6 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
@@ -192,7 +181,6 @@ footer{
   <p>Akses aplikasi premium dengan harga terjangkau.</p>
 </a>
 
-<!-- FOOD -->
 <a href="food/index.html" class="card">
   <svg class="icon" viewBox="0 0 24 24">
     <path d="M4 3h2v18H4zm4 0h2v10a2 2 0 11-2 0zm6 0h2v10a2 2 0 11-2 0zm4 0h2v18h-2z"/>
@@ -200,36 +188,22 @@ footer{
   <h3>Food</h3>
   <p>Makanan enak & kekinian buat nemenin santai.</p>
 </a>
-
 </section>
 
 <footer>
   © 2026 ALUNA STORE
 </footer>
 
-
 <script>
-/* ANIMASI CARD AUTO SAAT TERLIHAT */
 const cards = document.querySelectorAll('.card');
-
 const observer = new IntersectionObserver((entries)=>{
   entries.forEach(entry=>{
-
     if(entry.isIntersecting){
       entry.target.classList.add('show');
     }
-
   });
-},{
-  threshold:0.2
-});
-
-cards.forEach(card=>{
-  observer.observe(card);
-})
+},{ threshold:0.2 });
+cards.forEach(card=>observer.observe(card));
 </script>
-  
-</script>
-
 </body>
 </html>
