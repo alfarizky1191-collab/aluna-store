@@ -5,4 +5,4 @@ Disallow: /admin/
 Disallow: /food/checkout.html
 Disallow: /apps/checkout.html
 
-Sitemap: https://alunastore.my.id/sitemap.xml
+Sitemap: https://alunastore.my.id/sitemap.txt
