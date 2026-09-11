@@ -1,0 +1,30 @@
+name: Vendor Supabase JS
+
+on:
+  push:
+    branches:
+      - security/hardening-2026-09
+    paths:
+      - .github/workflows/vendor-supabase.yml
+
+permissions:
+  contents: read
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download pinned npm package
+        run: npm pack @supabase/supabase-js@2.112.3
+      - name: Extract browser UMD bundle
+        run: |
+          mkdir -p vendor
+          tar -xzf supabase-supabase-js-2.112.3.tgz package/dist/umd/supabase.js
+          cp package/dist/umd/supabase.js vendor/supabase.js
+          sha256sum vendor/supabase.js > vendor/supabase.js.sha256
+      - name: Upload vendored bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-js-2.112.3
+          path: vendor/
+          retention-days: 1
