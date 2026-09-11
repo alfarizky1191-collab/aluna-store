@@ -64,6 +64,8 @@ begin
 end;
 $$;
 
+revoke execute on function private.set_updated_at() from public;
+
 drop trigger if exists products_set_updated_at on public.products;
 create trigger products_set_updated_at
 before update on public.products
@@ -90,9 +92,9 @@ alter table public.products enable row level security;
 alter table public.product_variants enable row level security;
 alter table public.product_options enable row level security;
 
-revoke all on table public.admins from anon;
+revoke all privileges on table public.admins from anon, authenticated;
 grant select on table public.admins to authenticated;
-revoke insert, update, delete on table public.products, public.product_variants, public.product_options from anon;
+revoke all privileges on table public.products, public.product_variants, public.product_options from anon, authenticated;
 grant select on table public.products, public.product_variants, public.product_options to anon;
 grant select, insert, update, delete on table public.products, public.product_variants, public.product_options to authenticated;
 

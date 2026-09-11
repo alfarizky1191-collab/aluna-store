@@ -3,7 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#2563eb">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://vqtbbtbqfwtimhtaxmud.supabase.co wss://vqtbbtbqfwtimhtaxmud.supabase.co; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
   <title>Checkout - Aluna Premium Apps</title>
   <link rel="stylesheet" href="../assets/css/checkout.css">
@@ -23,6 +26,7 @@
     </section>
     <button class="checkout-button" id="order-button" type="button" disabled>Kirim Pesanan via WhatsApp</button>
   </main>
+  <script src="../assets/vendor/supabase-js-2.112.3.js"></script>
   <script type="module" src="../assets/js/apps-checkout.js"></script>
 </body>
 </html>
